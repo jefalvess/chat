@@ -1,5 +1,4 @@
 const mongoDB = require('./mongodb/mongoDB.js');
-const dotenv = require('dotenv').config();
 
 module.exports = function(app) {
 
@@ -88,8 +87,7 @@ module.exports = function(app) {
   require('./routes')(app);
 
   server.listen(process.env.PORT, function() {
-    console.log('- - - - - - - - - - - - - - - - - - - - - - - - ');
-    console.log('START SERVER PORT', process.env.PORT);
+    console.log('server started port', process.env.PORT);
   });
 
 

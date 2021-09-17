@@ -11,8 +11,8 @@ export default new Router({
   mode: 'history',
   routes: [
     // Proposals
-    { path: '/chat/chat', abstract: true, component: home },
-    { path: '/chat/login', abstract: true, component: create },
+    { path: '/chat', abstract: true, component: home },
+    { path: '/', abstract: true, component: create },
     { path: '/*', redirect: '/' },
   ]
 });
