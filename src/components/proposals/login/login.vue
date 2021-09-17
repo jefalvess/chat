@@ -77,6 +77,7 @@ export default {
 
     },
     proximaPagina(data){ 
+      this.$cookies.set("token", data.token , "8h")
       this.setCookieUserJson(data.token)
       this.setModalEdit(data.usuario);
       this.$router.push('/chat');

@@ -8,13 +8,14 @@
     </div>
     <!-- Lista de usuario conectados -->
     <div class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId">
-      <li
+      <p
         v-if="user.user_id !== modalEdit"
         v-bind:id="user.user_id"
         v-on:click="createRoom(user.user_id)"
+        style="padding: 0.5rem;"
       >
         {{ user.user_id }}
-      </li>
+      </p>
     </div>
     <!-- Chat -->
     <div
@@ -26,7 +27,7 @@
       <div class="bx--col">
         <div class="bx--row">
           <div style="width: 85%;" lass="bx--col--lg">ID CHAT : {{ room }}</div>
-          <div @click="minimizeChat(room, id)" class="bx--col">
+          <div @click="minimizeChat(room, id)" class="bx--col" style="cursor: pointer" >
             x
           </div>
         </div>

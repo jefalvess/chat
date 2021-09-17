@@ -26,7 +26,7 @@ module.exports = {
       jwt.sign(
         { data },
         process.env.JWT_KEY,
-        { expiresIn: '1h' },
+        { expiresIn: '12h' },
         (err, token) => {
           if (err) {
             console.log(err);

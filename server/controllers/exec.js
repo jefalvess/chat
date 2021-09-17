@@ -3,13 +3,12 @@ const mongoDB = require('../mongodb/mongoDB.js');
 const jwt = require('../jwt');
 const { validateUserToken } = require("./authenticator.js");
 
-
 const router = express.Router();
 
+router.post('/token/user', validateUserToken,  async  (req, res) => {
+  let token = await jwt.sign(JSON.stringify({ usuario: req.user.usuario, usuarioChat: true }));
+  return res.status(200).json( { status: true, usuario: req.user.usuario, token: token } );
 
-router.post('/mentoken/user/id', validateUserToken,  async  (req, res) => {
-  let token = req.params.id; 
-  return res.status(200).json(response);
 });
 
 router.post('/mensagens', validateUserToken,  async  (req, res) => {
