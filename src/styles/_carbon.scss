@@ -1,0 +1,86 @@
+@import 'carbon-components/scss/globals/scss/styles';
+
+
+a:link 
+{ 
+ text-decoration:none; 
+} 
+
+.setup-your-proposal {
+  height: 36px;
+  width: 350px;
+  color: #161616;
+  font-family: 'IBM Plex Sans';
+  font-size: 28px;
+  line-height: 36px;
+  margin-top: 3.5rem;
+}
+
+.new-proposals-header {
+  height: 26px;
+  width: 125px;
+  color: #161616;
+  font-family: 'IBM Plex Sans';
+  font-size: 20px;
+  line-height: 26px;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.new-proposals-sub-header {
+  height: 40px;
+  color: #525252;
+  font-family: 'IBM Plex Sans';
+  font-size: 14px;
+  letter-spacing: 0.16px;
+  line-height: 20px;
+}
+
+html,
+body {
+  background-color: #f3f3f3;
+}
+
+.new-proposals-proposal-terms {
+  color: #565656;
+  font-family: 'IBM Plex Sans';
+  font-size: 12px;
+  line-height: 16px;
+}
+
+// certinho
+.bx--tabs--scrollable__nav {
+  height: 3rem;
+  background-color: #c6c6c6;
+}
+
+.bx--tabs--scrollable .bx--tabs--scrollable__nav-item .bx--tabs--scrollable__nav-link { 
+  color:black !important;
+  -webkit-box-shadow: -1px 0 0 0 #8d8d8d;
+  box-shadow: -1px 0 0 0 #8d8d8d;
+}
+
+.bx--tabs--scrollable .bx--tabs--scrollable__nav-item--selected .bx--tabs--scrollable__nav-link, .bx--tabs--scrollable .bx--tabs--scrollable__nav-item--selected .bx--tabs--scrollable__nav-link:focus, .bx--tabs--scrollable .bx--tabs--scrollable__nav-item--selected .bx--tabs--scrollable__nav-link:active {
+  border: 2px solid #0f62fe;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
