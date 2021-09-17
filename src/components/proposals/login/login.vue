@@ -20,14 +20,25 @@
 
       </div> 
 
-    <div class="bx--row">
+    <div style="margin-top: 1rem" class="bx--row">
+
+     <div class="bx--col-lg-3">
           <cv-button
-  
-      @click="createUser()"
+           @click="createUser()"
 
     >
         Login
     </cv-button>
+    </div>
+
+    <div class="bx--col">
+    <cv-button
+     kind="secondary"
+  @click="criarUsuario()"
+>
+  Criar Usuario
+</cv-button>
+    </div> 
 
     </div>
 
@@ -50,7 +61,7 @@ export default {
     ...mapGetters(['modalEdit']),
   },
   methods: {
-    ...mapActions(['setModalEdit']),
+    ...mapActions(['setModalEdit', 'setCookieUserJson']),
     // Criar usuario / Login
     async createUser() {
       let payload = { usuario : this.usuario, senha: this.senha }; 
@@ -61,15 +72,17 @@ export default {
       }
 
       if (response.data.status === true) {     
-        this.proximaPagina(response.data.usuario)
+        this.proximaPagina(response.data)
       }
 
     },
-    proximaPagina(){ 
-
-      this.setModalEdit(this.usuario);
+    proximaPagina(data){ 
+      this.setCookieUserJson(data.token)
+      this.setModalEdit(data.usuario);
       this.$router.push('/chat');
-
+    },
+    criarUsuario(){
+        this.$router.push('/create');
     }
   }
 };

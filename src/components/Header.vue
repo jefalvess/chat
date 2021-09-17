@@ -23,24 +23,23 @@ export default {
   methods: {
     ...mapActions(['setLoadingPage']),
     redirect() {
-      let page = window.location.href.split('/');
-      console.log(page);
-      if (page[3] !== '') {
-        this.setLoadingPage(true);
-        if (page[3] === 'approver') {
-          return window.open(`${window.location.origin}/approver`, '_self');
-        }
+      return window.open(`${window.location.origin}/`, '_self');
+    },
+    checarToken(){
+      // console.log('Checar token de acesso ')
+      // console.log(this.cookieUserJson)
+      // this.$cookies.set("token", "teste", "8h")
 
-        if (page[3] === 'sales') {
-          return window.open(`${window.location.origin}/sales`, '_self');
-        }
+      let cookie = this.$cookies.get("token")
+      
+      console.log(cookie)
 
-        if (page[3] === 'error') {
-          return window.open(`${window.location.origin}/`, '_self');
-        }
-      }
     }
-  }
+
+  },
+  mounted() {
+    this.checarToken();
+  },
 };
 </script>
 

@@ -4,7 +4,7 @@
     class="bx--grid"
   >
     <div class="bx--row">
-      <p style="font-size: 22px;">Usuario conectado : {{ modalEdit }}</p>
+      <p style="font-size: 22px;">Usuario conectado : {{ modalEdit }} </p>
     </div>
     <!-- Lista de usuario conectados -->
     <div class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId">
@@ -91,7 +91,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['loadingPage', 'modalEdit']),
+    ...mapGetters(['loadingPage', 'modalEdit', 'cookieUserJson']),
     listRoomComputed: {
       get() {
         return this.listRoom;
@@ -115,8 +115,8 @@ export default {
 
         this.listRoom.push(room);
         this.mensagemParticular.push('');
-
-        let response = await axios.get('/api/mensagens/' + room);
+        let payload = { token: this.cookieUserJson, room :  room }
+        let response = await axios.post('/api/mensagens', payload );
 
         if (response.data.length > 0) {
           this.messages = this.messages.concat(response.data);
@@ -153,7 +153,7 @@ export default {
       this.chats.splice(index, 1);
       this.messages = this.messages.filter(item => item.room !== room);
     },
-    createUser() {
+    checarUsuario() {
       if (this.modalEdit === '') {
         this.$router.push('/');
       } else {
@@ -163,9 +163,10 @@ export default {
     }
   },
   mounted() {
-    this.createUser();
+    this.checarUsuario();
   },
   created: function() {
+
     // criar chat
     socket.on('updateUserList', response => {
       console.log('atualiaçao de usuarios');
@@ -227,7 +228,8 @@ export default {
       if (this.listRoom.indexOf(msg.room) === -1) {
         this.listRoom.push(msg.room);
         this.chats.push(msg.from);
-        let response = await axios.get('/api/mensagens/' + msg.room);
+        let payload = { token: this.cookieUserJson, room :  msg.room }
+        let response = await axios.post('/api/mensagens', payload );
         if (response.data.length > 0) {
           this.messages = this.messages.concat(response.data);
         }

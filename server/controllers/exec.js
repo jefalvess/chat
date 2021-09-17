@@ -1,10 +1,20 @@
 const express = require('express');
 const mongoDB = require('../mongodb/mongoDB.js');
+const jwt = require('../jwt');
+const { validateUserToken } = require("./authenticator.js");
+
 
 const router = express.Router();
 
-router.get('/mensagens/:id', async  (req, res) => {
-  let room = req.params.id; 
+
+router.post('/mentoken/user/id', validateUserToken,  async  (req, res) => {
+  let token = req.params.id; 
+  return res.status(200).json(response);
+});
+
+router.post('/mensagens', validateUserToken,  async  (req, res) => {
+  console.log(req.body)
+  let room = req.body.room; 
   let response = await mongoDB.query({ room: room });
   return res.status(200).json(response);
 });
@@ -29,14 +39,18 @@ router.post('/create/user', async  (req, res) => {
       }
   }
 
+  let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, usuarioChat: true } ));
+
   let novoDocument = {
     status: true, 
     usuario : req.body.usuario,
     senha : req.body.senha,
-    data: new Date ()
+    data: new Date (),
   }
 
-  let createUser = await mongoDB.insertDocument([ novoDocument])
+  await mongoDB.insertDocument([ novoDocument])
+
+  novoDocument ['token'] = token; 
 
   return res.status(200).json(novoDocument);
 
@@ -57,7 +71,8 @@ router.post('/login/user', async  (req, res) => {
   let buscarUsuario = await mongoDB.query({ usuario: req.body.usuario });
   if ( buscarUsuario.length > 0 ) { 
       if (buscarUsuario[0].usuario === req.body.usuario && buscarUsuario[0].senha === req.body.senha ) { 
-        return res.status(200).json( { status: true, usuario: buscarUsuario[0].usuario } );
+        let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, usuarioChat: true }));
+        return res.status(200).json( { status: true, usuario: buscarUsuario[0].usuario, token: token } );
       }
   }
 

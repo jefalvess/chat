@@ -20,7 +20,8 @@
 
       </div> 
 
-    <div class="bx--row">
+    <div style="margin-top: 1rem" class="bx--row">
+       <div class="bx--col-lg-4">
           <cv-button
   
       @click="createUser()"
@@ -28,6 +29,19 @@
     >
          Criar Usuario 
     </cv-button>
+    </div>
+
+
+     
+
+    <div class="bx--col">
+    <cv-button
+     kind="secondary"
+  @click="login()"
+>
+  Login
+</cv-button>
+    </div> 
 
     </div>
 
@@ -38,6 +52,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -47,10 +62,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['modalEdit']),
+    ...mapGetters(['modalEdit',]),
   },
   methods: {
-    ...mapActions(['setModalEdit']),
+    ...mapActions(['setModalEdit', 'setCookieUserJson']),
     // Criar usuario / Login
     async createUser() {
       let payload = { usuario : this.usuario, senha: this.senha }; 
@@ -61,14 +76,19 @@ export default {
       }
 
       if (response.data.status === true) {     
-        this.proximaPagina(response.data.usuario)
+        this.proximaPagina(response.data)
       }
 
     },
-    proximaPagina(){ 
-
-      this.setModalEdit(this.usuario);
+    proximaPagina(data){ 
+      this.setCookieUserJson(data.token)
+      this.setModalEdit(data.usuario);
       this.$router.push('/chat');
+
+    },
+    login () { 
+
+        this.$router.push('/login');
 
     }
   }

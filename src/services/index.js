@@ -92,27 +92,10 @@ axios.get('/api/token').then(function (response) {
 })
 
 
-const getProposals = payload => instance.get(`/api/getlistproposals`, payload);
-const getClientCheck = payload => instance.get(`/api/clientCheck/${payload.id}`, payload);
+const criarUsuario = payload => instance.get(`/api/getlistproposals`, payload);
 
-const createProposal = payload => instance.post(`/api/create`, payload);
-
-const generatePDF = payload => instance.get(`/api/pdf/${payload.id}`, payload);
-const generateDOCX = payload => instance.get(`/api/docx/${payload.id}`, payload);
-const generetedExcel = payload => instance.post(`/api/excel/request`, payload);
-
-const submitEngageSupport = payload => instance.post(`/api/engage/submit`, payload);
-
-const listDocuments = payload => instance.post(`/api/python/list`, payload);
 
 
 export default {
-  getProposals,
-  createProposal,
-  generatePDF,
-  generateDOCX,
-  getClientCheck,
-  generetedExcel,
-  submitEngageSupport,
-  listDocuments
+  criarUsuario,
 };
