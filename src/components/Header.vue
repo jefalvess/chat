@@ -2,10 +2,10 @@
   <div style="margin-bottom: 3.1rem" class="bx--row">
     <cv-header aria-label="Carbon header">
       <cv-header-name style="cursor: pointer" @click="redirect()" prefix="IBM">
-        Proposal XP
+        Project 
       </cv-header-name>
       <template slot="header-global">
-        <p class="confidential">IBM Confidential</p>
+        <p class="confidential"> Chat </p>
       </template>
     </cv-header>
   </div>

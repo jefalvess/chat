@@ -199,12 +199,16 @@ export default {
           } else {
             room = this.chats[i] + this.modalEdit;
           }
-          this.reconectar.push(this.chats[i]);
-          this.messages.push({
-            room: room,
-            message: 'Usuario esta off',
-            from: 'Automatica'
-          });
+    
+          // Primeira noticaçao para o chat
+          if (this.reconectar.indexOf(this.chats[i]) === -1 ) { 
+            this.reconectar.push(this.chats[i]);
+            this.messages.push({
+              room: room,
+              message: 'Usuario esta off',
+              from: 'Automatica'
+            });
+          }
         }
       }
 

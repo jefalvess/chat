@@ -5,7 +5,7 @@
   >
     <!-- Login -->
     <div class="bx--row">
-      <cv-text-input label="User " v-model="usuario">
+      <cv-text-input label="User" v-model="usuario">
       </cv-text-input>
     </div>
 
@@ -26,7 +26,7 @@
       @click="createUser()"
 
     >
-         Criar Usuario 
+        Login
     </cv-button>
 
     </div>
@@ -54,7 +54,7 @@ export default {
     // Criar usuario / Login
     async createUser() {
       let payload = { usuario : this.usuario, senha: this.senha }; 
-      let response = await axios.post('/api/create/user', payload  );
+      let response = await axios.post('/api/login/user', payload  );
 
       if (response.data.status === false) { 
          this.erroMensagem = response.data.mensagem

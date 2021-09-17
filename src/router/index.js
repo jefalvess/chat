@@ -4,6 +4,7 @@ import Router from 'vue-router';
 
 const home = () => import('@/components/proposals/home/homePage.vue');
 const create = () => import('@/components/proposals/create/create.vue');
+const login = () => import('@/components/proposals/login/login.vue');
 
 
 Vue.use(Router);
@@ -12,6 +13,7 @@ export default new Router({
   routes: [
     // Proposals
     { path: '/chat', abstract: true, component: home },
+    { path: '/login', abstract: true, component: login },
     { path: '/', abstract: true, component: create },
     { path: '/*', redirect: '/' },
   ]
