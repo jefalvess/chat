@@ -1,28 +1,60 @@
-'use strict;';
 
-var exec = require('child_process').exec;
+const dotenv = require('dotenv');
+const fs = require('fs');
+const http = require('http');
+const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+const cors = require('cors');
+const path = require('path');
+const history = require('connect-history-api-fallback');
+const helmet = require('helmet');
 
+dotenv.config();
 
-const commands = ['npm install', 'touch teste.txt'];
+const port = process.env.PORT
 
-function runCommand(cmds, cb) {
-  const next = cmds.shift();
-  if (!next) return cb();
-  exec(
-    next,
-    {
-      cwd: __dirname
-    },
-    (err, stdout, stderr) => {
-      console.log(stdout);
-      if (err && !next.match(/\-s$/)) {
-        console.log(`O commando "${next}" falhou.`, err);
-        cb(err);
-      } else runCommand(cmds, cb);
-    }
-  );
+const app = express();
+
+app.use(cors());
+
+app.use(express.json({ limit: '50mb' }));
+
+app.use(session({ secret: process.env.SESSION_SECRET, resave: 'true', saveUninitialized: 'true' } ));
+
+app.use(helmet.frameguard({ action: 'SAMEORIGIN' }));
+
+app.use(passport.initialize());
+
+app.use(passport.session());
+
+require('./server/routes')(app);
+
+const staticFileMiddleware = express.static(path.join(__dirname));
+
+app.use(history());
+
+app.use(staticFileMiddleware);
+
+app.use('/', express.static('./public'));
+
+if (process.env.NODE_ENV === 'local') {
+
+  // Create a local server to receive data from
+  http.createServer(app).listen(port, function (req, res) {
+    console.log(`**** http LOCAL \nListening on port ${port}`);
+    console.log('http://localhost:' + port);
+  });
+
+} else {
+
+  app.listen(process.env.PORT, () => {
+    console.log(`**** http ${process.env.NODE_ENV} Listening on port ${port}`);
+  });
+
 }
 
-runCommand(commands, err => {
-  console.log('Script corrido');
-});
+module.exports = app;
+
+
+
