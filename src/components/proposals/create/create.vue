@@ -10,7 +10,7 @@
     </div>
 
       <div class="bx--row">
-      <cv-text-input label="senha" v-model="senha">
+      <cv-text-input label="senha" type="password" v-model="senha">
       </cv-text-input>
     </div>
 

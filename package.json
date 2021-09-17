@@ -14,7 +14,7 @@
     "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
     "watch": "vue-cli-service build --mode development --watch",
-    "nodemon": "nodemon index.js",
+    "nodemon": "nodemon app.js",
     "dev": "concurrently --kill-others \"npm:watch\" \"npm:nodemon\"",
     "start:prod": "vue-cli-service build --mode production && node app.js",
     "start:qa": "vue-cli-service build --mode test && node app.js",
@@ -135,6 +135,6 @@
     "url": "https://github.com/carbon-design-system/carbon-tutorial-vue/issues"
   },
   "homepage": "https://github.com/carbon-design-system/carbon-tutorial-vue#readme",
-  "main": "index.js",
+  "main": "app.js",
   "keywords": []
 }
