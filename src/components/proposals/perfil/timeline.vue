@@ -39,6 +39,7 @@ import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
 
 export default {
+  name: 'timeline',
   data() {
     return {
       textoInput: '',

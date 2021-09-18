@@ -36,7 +36,7 @@
      kind="secondary"
   @click="criarUsuario()"
 >
-  Criar Usuario
+Create User
 </cv-button>
     </div> 
 

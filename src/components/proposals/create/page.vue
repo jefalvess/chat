@@ -25,12 +25,12 @@
 
     <div style="margin-top: 1rem" class="bx--row">
         <div class="bx--col-lg-4">
-          <cv-button @click="createUser()">
-          Criar Usuario 
+          <cv-button kind="secondary" @click="createUser()">
+           Create User
           </cv-button>
         </div>
         <div class="bx--col">
-          <cv-button kind="secondary" @click="login()" > Login </cv-button>
+          <cv-button  @click="login()" > Back </cv-button>
         </div> 
     </div>
   </div>

@@ -4,7 +4,7 @@
   >
     <div class="bx--row">
      <div class="bx--col-lg-3">
-     1
+     <usuario />
      </div>
       <div class="bx--col-lg-4">
      <timeline />
@@ -22,15 +22,18 @@
 import { mapGetters, mapActions } from 'vuex';
 const chat = () => import('./chat.vue');
 const timeline = () => import('./timeline.vue');
+const usuario = () => import('./usuario.vue');
 
 export default {
+  name: 'page',
   data() {
     return {
     };
   },
   components: {
     chat,
-    timeline
+    timeline,
+    usuario
   },
   computed: {
     ...mapGetters([ 'modalEdit']),

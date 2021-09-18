@@ -2,9 +2,13 @@
   <div
     class="bx--grid"
   >
-    <div class="bx--row">
-      <p style="font-size: 22px;">Usuario conectado : {{ modalEdit }} </p>
-    </div>
+    <div v-if="loadingPage.length === 1"> 
+      <p style="font-size: 22px;">Nenhum usuario conectado  </p>
+    </div> 
+
+    <div v-else class="bx--row"> 
+      <p style="font-size: 22px;">Usuario conectados agora  {{ modalEdit }} </p>
+    </div> 
     <!-- Lista de usuario conectados -->
     <div class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId">
       <p
