@@ -8,7 +8,6 @@ const router = express.Router();
 router.post('/token/user', validateUserToken,  async  (req, res) => {
   let token = await jwt.sign(JSON.stringify({ usuario: req.user.usuario, usuarioChat: true }));
   return res.status(200).json( { status: true, usuario: req.user.usuario, token: token } );
-
 });
 
 router.post('/mensagens', validateUserToken,  async  (req, res) => {
@@ -29,7 +28,7 @@ router.post('/create/user', async  (req, res) => {
     return res.status(200).json( { status: false, mensagem: 'Senha com erro' } );
   }
 
-  let buscarUsuario = await mongoDB.query({ usuario: req.body.usuario });
+  let buscarUsuario = await mongoDB.query({ usuario: req.body.usuario, type : "user" });
 
   if ( buscarUsuario.length > 0 ) { 
       if (buscarUsuario[0].usuario === req.body.usuario ) { 
@@ -45,6 +44,7 @@ router.post('/create/user', async  (req, res) => {
     usuario : req.body.usuario,
     senha : req.body.senha,
     data: new Date (),
+    type : "user"
   }
 
   await mongoDB.insertDocument([ novoDocument])
@@ -67,7 +67,7 @@ router.post('/login/user', async  (req, res) => {
   }
   
   // Validar senha do usuario 
-  let buscarUsuario = await mongoDB.query({ usuario: req.body.usuario });
+  let buscarUsuario = await mongoDB.query({ usuario: req.body.usuario, type : "user" });
   if ( buscarUsuario.length > 0 ) { 
       if (buscarUsuario[0].usuario === req.body.usuario && buscarUsuario[0].senha === req.body.senha ) { 
         let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, usuarioChat: true }));
@@ -76,6 +76,35 @@ router.post('/login/user', async  (req, res) => {
   }
 
   return res.status(200).json( { status: false, mensagem: 'Usuario ou senha nao com erros' } );
+
+});
+
+
+router.post('/buscar/timeline', validateUserToken,  async  (req, res) => {
+  
+  let buscarTimeline = await mongoDB.query({ type : "post" });
+
+  buscarTimeline.sort((a, b) => (a.order < b.order ? 1 : -1));
+
+  return res.status(200).json( { status: true, timelineData: buscarTimeline } );
+
+});
+
+
+router.post('/create/timeline', validateUserToken,  async  (req, res) => {
+  
+  let novoDocument = {
+    status: true, 
+    usuario : req.user.usuario,
+    data: new Date (),
+    type : "post",
+    texto: req.body.texto,
+    order: Date.now()
+  }
+
+  mongoDB.insertDocument([ novoDocument ])
+
+  return res.status(200).json( { status: true, mensagem: 'salvo com sucesso' } );
 
 });
 

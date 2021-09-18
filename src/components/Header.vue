@@ -2,10 +2,10 @@
   <div style="margin-bottom: 3.1rem" class="bx--row">
     <cv-header aria-label="Carbon header">
       <cv-header-name style="cursor: pointer" @click="redirect()" prefix="Porject">
-        Chat 
+        Jeff 
       </cv-header-name>
-      <template slot="header-global">
-        <p class="confidential"> online </p>
+      <template   slot="header-global">
+        <p style="cursor: pointer" @click="logoff()" class="confidential"> Sair </p>
       </template>
     </cv-header>
   </div>
@@ -41,8 +41,14 @@ export default {
       this.$cookies.set("token", data.token , "8h")
       this.setCookieUserJson(data.token)
       this.setModalEdit(data.usuario);
-      this.$router.push('/chat');
+      this.$router.push('/perfil');
     },
+    async logoff (){
+      this.$cookies.remove("token");
+       this.$router.push('/');
+
+      
+    }
   },
   mounted() {
     this.checarToken();

@@ -1,6 +1,5 @@
 <template>
   <div
-    style="width: 50rem; margin-bottom: 7rem; margin-top: 7rem;"
     class="bx--grid"
   >
     <div class="bx--row">
@@ -82,6 +81,7 @@ const socket = io({ transports: ['websocket'] });
 console.log('criar socket.io');
 
 export default {
+  name: 'chat',
   data() {
     return {
       messages: [],
@@ -154,17 +154,15 @@ export default {
       this.chats.splice(index, 1);
       this.messages = this.messages.filter(item => item.room !== room);
     },
-    checarUsuario() {
-      if (this.modalEdit === '') {
-        this.$router.push('/');
-      } else {
-        console.log('criar usuario ');
+    criarUsuario() {
+      if (this.modalEdit !== '') {
         socket.emit('loggedin', { user_id: this.modalEdit });
-      }
+      } 
+      
     }
   },
   mounted() {
-    this.checarUsuario();
+    this.criarUsuario();
   },
   created: function() {
 

@@ -2,9 +2,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-const chat = () => import('@/components/proposals/chat/chat.vue');
-const create = () => import('@/components/proposals/create/create.vue');
-const login = () => import('@/components/proposals/login/login.vue');
+const perfil = () => import('@/components/proposals/perfil/page.vue');
+const create = () => import('@/components/proposals/create/page.vue');
+const login = () => import('@/components/proposals/login/page.vue');
 
 
 Vue.use(Router);
@@ -14,7 +14,7 @@ export default new Router({
     // Proposals
     { path: '/', abstract: true, component: login },
     { path: '/create', abstract: true, component: create },
-    { path: '/chat', abstract: true, component: chat },
+    { path: '/perfil', abstract: true, component: perfil },
     { path: '/*', redirect: '/' },
   ]
 });

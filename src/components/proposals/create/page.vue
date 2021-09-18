@@ -5,7 +5,7 @@
   >
     <!-- Login -->
     <div class="bx--row">
-      <cv-text-input label="User" v-model="usuario">
+      <cv-text-input label="User " v-model="usuario">
       </cv-text-input>
     </div>
 
@@ -21,22 +21,25 @@
       </div> 
 
     <div style="margin-top: 1rem" class="bx--row">
-
-     <div class="bx--col-lg-3">
+       <div class="bx--col-lg-4">
           <cv-button
-           @click="createUser()"
+  
+      @click="createUser()"
 
     >
-        Login
+         Criar Usuario 
     </cv-button>
     </div>
+
+
+     
 
     <div class="bx--col">
     <cv-button
      kind="secondary"
-  @click="criarUsuario()"
+  @click="login()"
 >
-  Criar Usuario
+  Login
 </cv-button>
     </div> 
 
@@ -49,6 +52,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -58,14 +62,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['modalEdit']),
+    ...mapGetters(['modalEdit',]),
   },
   methods: {
     ...mapActions(['setModalEdit', 'setCookieUserJson']),
     // Criar usuario / Login
     async createUser() {
       let payload = { usuario : this.usuario, senha: this.senha }; 
-      let response = await axios.post('/api/login/user', payload  );
+      let response = await axios.post('/api/create/user', payload  );
 
       if (response.data.status === false) { 
          this.erroMensagem = response.data.mensagem
@@ -80,10 +84,13 @@ export default {
       this.$cookies.set("token", data.token , "8h")
       this.setCookieUserJson(data.token)
       this.setModalEdit(data.usuario);
-      this.$router.push('/chat');
+      this.$router.push('/perfil');
+
     },
-    criarUsuario(){
-        this.$router.push('/create');
+    login () { 
+
+        this.$router.push('/login');
+
     }
   }
 };
