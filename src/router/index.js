@@ -2,9 +2,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-const perfil = () => import('@/components/proposals/perfil/page.vue');
-const create = () => import('@/components/proposals/create/page.vue');
-const login = () => import('@/components/proposals/login/page.vue');
+const perfil = () => import('@/components/perfil/page.vue');
+const create = () => import('@/components/create/page.vue');
+const login = () => import('@/components/login/page.vue');
 
 
 Vue.use(Router);

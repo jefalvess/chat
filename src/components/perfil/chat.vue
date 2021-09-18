@@ -7,7 +7,7 @@
     </div> 
 
     <div v-else class="bx--row"> 
-      <p style="font-size: 22px;">Usuario conectados agora  {{ modalEdit }} </p>
+      <p style="font-size: 22px;">Usuarios conectados agora </p>
     </div> 
     <!-- Lista de usuario conectados -->
     <div class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId">
@@ -15,7 +15,7 @@
         v-if="user.user_id !== modalEdit"
         v-bind:id="user.user_id"
         v-on:click="createRoom(user.user_id)"
-        style="padding: 0.5rem;"
+        style="padding: 0.5rem; cursor: pointer"
       >
         {{ user.user_id }}
       </p>

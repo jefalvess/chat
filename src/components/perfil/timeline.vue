@@ -71,11 +71,23 @@ export default {
        this.timelineData.splice(0, 0, { usuario: this.modalEdit,  texto: this.textoInput, order: Date.now () } )
        this.textoInput = ''
       }
+    },
+    async loopdebusca () {
+      let can = this; 
+      setInterval( async function(){
+        let payload = { token: can.cookieUserJson, usuario : can.modalEdit }
+        let response = await axios.post('/api/buscar/timeline', payload );
+        if (response.data.status === true) { 
+          can.timelineData = response.data.timelineData;
+        }
+      }, 1000 * 60 * 60);
+
     }
 
   },
   mounted() {
     this.buscarMensagens()
+    this.loopdebusca()
   },
 };
 </script>
