@@ -5,47 +5,34 @@
   >
     <!-- Login -->
     <div class="bx--row">
-      <cv-text-input label="User " v-model="usuario">
+      <cv-text-input label="Usuario " v-model="usuario">
       </cv-text-input>
     </div>
 
-      <div class="bx--row">
-      <cv-text-input label="senha" type="password" v-model="senha">
+    <div class="bx--row">
+      <cv-text-input label="Senha" type="password" v-model="senha">
       </cv-text-input>
     </div>
 
-      <div v-if="erroMensagem !== false" class="bx--row">
+    <div class="bx--row">
+      <cv-text-input label="Nome" v-model="nome">
+      </cv-text-input>
+    </div>
 
+    <div style="margin-top: 1rem;" v-if="erroMensagem !== false" class="bx--row">
       {{ erroMensagem }}
-
-      </div> 
-
-    <div style="margin-top: 1rem" class="bx--row">
-       <div class="bx--col-lg-4">
-          <cv-button
-  
-      @click="createUser()"
-
-    >
-         Criar Usuario 
-    </cv-button>
-    </div>
-
-
-     
-
-    <div class="bx--col">
-    <cv-button
-     kind="secondary"
-  @click="login()"
->
-  Login
-</cv-button>
     </div> 
 
+    <div style="margin-top: 1rem" class="bx--row">
+        <div class="bx--col-lg-4">
+          <cv-button @click="createUser()">
+          Criar Usuario 
+          </cv-button>
+        </div>
+        <div class="bx--col">
+          <cv-button kind="secondary" @click="login()" > Login </cv-button>
+        </div> 
     </div>
-
-
   </div>
 </template>
 
@@ -59,6 +46,7 @@ export default {
       usuario: '',
       senha: '', 
       erroMensagem: false,
+      nome: ''
     };
   },
   computed: {
@@ -68,7 +56,7 @@ export default {
     ...mapActions(['setModalEdit', 'setCookieUserJson']),
     // Criar usuario / Login
     async createUser() {
-      let payload = { usuario : this.usuario, senha: this.senha }; 
+      let payload = { usuario : this.usuario, senha: this.senha, nome : this.nome}; 
       let response = await axios.post('/api/create/user', payload  );
 
       if (response.data.status === false) { 

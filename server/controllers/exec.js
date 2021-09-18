@@ -19,21 +19,24 @@ router.post('/mensagens', validateUserToken,  async  (req, res) => {
 
 
 router.post('/create/user', async  (req, res) => {
-
+  
   if (!req.body.usuario) { 
-    return res.status(200).json( { status: false, mensagem: 'Usuario com erro' } );
+    return res.status(200).json( { status: false, mensagem: 'Usuario invalido' } );
   }
 
   if (!req.body.senha) { 
-    return res.status(200).json( { status: false, mensagem: 'Senha com erro' } );
+    return res.status(200).json( { status: false, mensagem: 'Senha invalida' } );
   }
 
+  if (!req.body.nome) { 
+    return res.status(200).json( { status: false, mensagem: 'Nome invalido' } );
+  }
+  
   let buscarUsuario = await mongoDB.query({ usuario: req.body.usuario, type : "user" });
 
   if ( buscarUsuario.length > 0 ) { 
       if (buscarUsuario[0].usuario === req.body.usuario ) { 
         return res.status(200).json( { status: false, mensagem: 'Usuario ja existe ' } );
-
       }
   }
 
