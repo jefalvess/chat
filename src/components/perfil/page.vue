@@ -19,17 +19,13 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 const chat = () => import('./chat.vue');
 const timeline = () => import('./timeline.vue');
 const usuario = () => import('./usuario.vue');
 
 export default {
   name: 'page',
-  data() {
-    return {
-    };
-  },
   components: {
     chat,
     timeline,
@@ -39,7 +35,6 @@ export default {
     ...mapGetters([ 'modalEdit']),
   },
   methods: {
-    ...mapActions(['setLoadingPage', 'setModalEdit']),
     checarUsuario() {
       if (this.modalEdit === '') {
         this.$router.push('/');

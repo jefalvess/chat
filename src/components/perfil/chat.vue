@@ -104,7 +104,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setLoadingPage', 'setModalEdit']),
+    ...mapActions(['setLoadingPage']),
     // Criar sala de bate papo
     async createRoom(id) {
       console.log('Abri chat ');
