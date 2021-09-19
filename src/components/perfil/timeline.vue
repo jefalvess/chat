@@ -43,7 +43,8 @@ export default {
   data() {
     return {
       textoInput: '',
-      timelineData: []
+      timelineData: [],
+      token: ''
     };
   },
   computed: {
@@ -58,7 +59,7 @@ export default {
     ...mapActions(['setLoadingPage']),
 
     async buscarMensagens () { 
-      let payload = { token: this.cookieUserJson, usuario : this.modalEdit }
+      let payload = { token: this.token, usuario : this.modalEdit }
        let response = await axios.post('/api/buscar/timeline', payload );
        if (response.data.status === true) { 
          this.timelineData = response.data.timelineData
@@ -66,7 +67,7 @@ export default {
     },
     async postTimeLine () {
       if (this.textoInput !== '') {
-       let payload = { token: this.cookieUserJson, usuario : this.modalEdit , texto: this.textoInput }
+       let payload = { token: this.token, usuario : this.modalEdit , texto: this.textoInput }
        axios.post('/api/create/timeline', payload );
        this.timelineData.splice(0, 0, { usuario: this.modalEdit,  texto: this.textoInput, order: Date.now () } )
        this.textoInput = ''
@@ -75,7 +76,7 @@ export default {
     async loopdebusca () {
       let can = this; 
       setInterval( async function(){
-        let payload = { token: can.cookieUserJson, usuario : can.modalEdit }
+        let payload = { token: can.token, usuario : can.modalEdit }
         let response = await axios.post('/api/buscar/timeline', payload );
         if (response.data.status === true) { 
           can.timelineData = response.data.timelineData;
@@ -86,6 +87,7 @@ export default {
 
   },
   mounted() {
+    this.token = this.$cookies.get("token")
     this.buscarMensagens()
     this.loopdebusca()
   },

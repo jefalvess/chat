@@ -27,14 +27,12 @@ export default {
       return window.open(`${window.location.origin}/`, '_self');
     },
     async checarToken(){
-  
       let cookie = this.$cookies.get("token")
       if (cookie !== null) { 
         let response = await axios.post('/api/token/user', {token : cookie} );
-
-      if (response.data.status === true) {     
-        this.proximaPagina(response.data)
-      }
+        if (response.data.status === true) {     
+          this.proximaPagina(response.data)
+        }
       }
     },
     proximaPagina(data){ 
