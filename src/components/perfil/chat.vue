@@ -58,7 +58,7 @@
         </div>
         <!-- Botao de enviar mensagem -->
         <div class="bx--row">
-          <div class="chat-window" id="${room}">
+          <div class="chat-window" v-bind:id="room">
             <div class="body"></div>
             <div class="footer">
               <input
