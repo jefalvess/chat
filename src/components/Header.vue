@@ -7,12 +7,6 @@
           [Rede Social]
         </cv-header-name>
 
-        <template>
-          <cv-side-nav id="side-nav" rail>
-            <chat />
-          </cv-side-nav>
-        </template>
-
         <template slot="header-global">
            <p style="cursor: pointer" @click="logoff()" class="confidential"> Sair </p>
         </template>
@@ -23,13 +17,8 @@
 </template>
 
 <script>
-const chat = () => import('./perfil/chat.vue');
-
 export default {
   name: 'header-page',
-  components: {
-    chat
-  },
   methods: {
     redirect() {
       return window.open(`${window.location.origin}/`, '_self');

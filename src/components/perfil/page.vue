@@ -1,20 +1,17 @@
 <template>
-  <div
-    class="bx--grid"
-  >
+  <div class="bx--grid" >
     <div class="bx--row">
-     <div class="bx--col-lg-3">
-     <usuario />
-     </div>
-      <div class="bx--col-lg-4">
-     <timeline />
-     </div>
       <div class="bx--col-lg-3">
-       <chat />
+        <usuario />
+        <chat />
+      </div>
+      <div style="overflow: auto; height: 100vh;" class="bx--col-lg-6">
+        <timeline />
+      </div>
+      <div class="bx--col-lg-3">
+        Novidades
      </div>
-
     </div>
- 
   </div>
 </template>
 
@@ -32,13 +29,13 @@ export default {
     usuario
   },
   computed: {
-    ...mapGetters([ 'modalEdit']),
+    ...mapGetters(['modalEdit'])
   },
   methods: {
     checarUsuario() {
       if (this.modalEdit === '') {
         this.$router.push('/');
-      } 
+      }
     }
   },
   mounted() {

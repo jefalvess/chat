@@ -1,79 +1,87 @@
 <template>
-  <div
-    class="bx--grid"
-  >
-    <div v-if="loadingPage.length === 1"> 
-      <p style="font-size: 22px;">Nenhum usuario conectado  </p>
-    </div> 
+  <div class="bx--grid" >
 
-    <div v-else class="bx--row"> 
-      <p style="font-size: 22px;">Usuarios conectados agora </p>
-    </div> 
-    <!-- Lista de usuario conectados -->
-    <div class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId">
-      <p
-        v-if="user.user_id !== modalEdit"
-        v-bind:id="user.user_id"
-        v-on:click="createRoom(user.user_id)"
-        style="padding: 0.5rem; cursor: pointer"
-      >
-        {{ user.user_id }}
-      </p>
-    </div>
-    <!-- Chat -->
-    <div
-      class="bx--row"
-      v-bind:key="room"
-      v-for="(room, id) in listRoomComputed"
-      style="width: 17rem;border: 1px solid black;min-height: 17.5rem;max-height: 17.5rem; margin-top: 2rem;"
-    >
-      <div class="bx--col">
-        <div class="bx--row">
-          <div style="width: 85%;" lass="bx--col--lg">ID CHAT : {{ room }}</div>
-          <div @click="minimizeChat(room, id)" class="bx--col" style="cursor: pointer" >
-            x
+  
+      <!-- Chat -->
+      <div
+        class="bx--row"
+        v-bind:key="room"
+        v-for="(room, id) in listRoomComputed"
+        style="width: 17rem;border: 1px solid black;min-height: 17.5rem;max-height: 17.5rem; margin-top: 2rem;" >
+        <div class="bx--col">
+          <div class="bx--row">
+            <div style="width: 80%; padding-top: 0.5rem; padding-bottom: 0.5rem;" lass="bx--col--lg">ID CHAT : {{ room }}</div>
+            <div @click="minimizeChat(room, id)" class="bx--col" style="cursor: pointer; font-size: 1.3rem;" >
+              x
+            </div>
           </div>
-        </div>
 
-        <!-- Chat -->
-        <div
-          class="bx--row"
-          style="overflow: auto; flex-direction: column-reverse; min-height: 15rem; max-height: 15rem;"
-        >
-          <div class="bx--col">
-            <div
-              class="bx--row"
-              v-for="(message, index) in messages"
-              v-bind:key="index"
-            >
-              <div v-if="room === message.room">
-                <div>
-                  <span class="message"
-                    >{{ message.from }}: {{ message.message }}
-                  </span>
+          <!-- Chat -->
+          <div
+            class="bx--row"
+            style="overflow: auto; flex-direction: column-reverse; min-height: 13.5rem; max-height: 13.5rem;"
+          >
+            <div class="bx--col">
+              <div
+                class="bx--row"
+                v-for="(message, index) in messages"
+                v-bind:key="index"
+              >
+                <div v-if="room === message.room">
+                  <div>
+                    <span class="message"
+                      >{{ message.from }}: {{ message.message }}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- Botao de enviar mensagem -->
-        <div class="bx--row">
-          <div class="chat-window" v-bind:id="room">
-            <div class="body"></div>
-            <div class="footer">
-              <input
-                style="width: 14.7rem;"
-                type="text"
-                v-model="mensagemParticular[id]"
-                class="messageText"
-                v-on:keyup.enter="sendMessage(room, id)"
-              />
-              <button @click="sendMessage(room, id)">GO</button>
+          <!-- Botao de enviar mensagem -->
+          <div class="bx--row">
+            <div class="chat-window" v-bind:id="room">
+              <div class="body"></div>
+              <div class="footer">
+                <input
+                  style="width: 13.7rem;height: 2rem;"
+                  type="text"
+                  v-model="mensagemParticular[id]"
+                  class="messageText"
+                  v-on:keyup.enter="sendMessage(room, id)"
+                />
+                <button style="height: 2rem;" @click="sendMessage(room, id)">GO</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      
+     <cv-accordion ref="acc" :align="align" :size="size">
+       <cv-accordion-item>
+        <template slot="title">Usuarios conectados:</template>
+        <template slot="content">
+            
+          <div class="bx--row" v-if="loadingPage.length === 1"> 
+            <p style="padding-left: 1rem; cursor: pointer">Nenhum usuario conectado  </p>
+          </div> 
+
+         
+              <!-- Lista de usuario conectados -->
+              <div  v-else class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId">
+                <p
+                  v-if="user.user_id !== modalEdit"
+                  v-bind:id="user.user_id"
+                  v-on:click="createRoom(user.user_id)"
+                  style="padding-left: 1rem; cursor: pointer"
+                >
+                  {{ user.user_id }}
+                </p>
+               
+            </div>    
+          </template>
+      </cv-accordion-item>
+     </cv-accordion>
+    
   </div>
 </template>
 
@@ -93,7 +101,10 @@ export default {
       listRoom: [],
       chats: [],
       reconectar: [],
-      toke: ''
+      toke: '',
+      "align": "",
+  "disabled3": false,
+  "size": ""
     };
   },
   computed: {
@@ -266,3 +277,17 @@ export default {
   }
 };
 </script>
+
+<style>
+#pop{ 
+  position:absolute;
+  top:50%;
+  left:50%;
+  margin-left:-150px;
+  margin-top:-100px;
+  padding:10px;
+  width:300px;
+  height:200px;
+  border:1px solid #d0d0d0;
+}
+</style>
