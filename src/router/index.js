@@ -6,6 +6,9 @@ const perfil = () => import('@/components/perfil/page.vue');
 const create = () => import('@/components/create/page.vue');
 const login = () => import('@/components/login/page.vue');
 
+// import textProposal from '@/systemPages/hw/textEditor/textProposal.vue';
+// 
+
 
 Vue.use(Router);
 export default new Router({

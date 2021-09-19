@@ -12,34 +12,11 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import axios from 'axios';
-
 export default {
   name: 'header-page',
-  computed: {
-    ...mapGetters(['cookieUserJson'])
-  },
-
   methods: {
-    ...mapActions(['setCookieUserJson', 'setModalEdit' ]),
     redirect() {
       return window.open(`${window.location.origin}/`, '_self');
-    },
-    async checarToken(){
-      let cookie = this.$cookies.get("token")
-      if (cookie !== null) { 
-        let response = await axios.post('/api/token/user', {token : cookie} );
-        if (response.data.status === true) {     
-          this.proximaPagina(response.data)
-        }
-      }
-    },
-    proximaPagina(data){ 
-      this.$cookies.set("token", data.token , "8h")
-      this.setCookieUserJson(data.token)
-      this.setModalEdit(data.usuario);
-      this.$router.push('/perfil');
     },
     async logoff (){
       this.$cookies.remove("token");
@@ -47,10 +24,7 @@ export default {
 
       
     }
-  },
-  mounted() {
-    this.checarToken();
-  },
+  }
 };
 </script>
 

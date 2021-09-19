@@ -48,7 +48,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['modalEdit', 'cookieUserJson']),
+    ...mapGetters(['modalEdit']),
     listTimeLineDataComputed: {
       get() {
         return this.timelineData;

@@ -84,7 +84,20 @@ export default {
     },
     criarUsuario(){
         this.$router.push('/create');
+    },
+    async checarToken(){
+      let cookie = this.$cookies.get("token")
+      if (cookie !== null) { 
+        let response = await axios.post('/api/token/user', {token : cookie} );
+        if (response.data.status === true) {     
+          this.proximaPagina(response.data)
+        }
+      }
     }
+  },
+  mounted () {
+    this.checarToken()
+
   }
 };
 </script>

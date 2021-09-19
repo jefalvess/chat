@@ -92,11 +92,12 @@ export default {
       mensagemParticular: [],
       listRoom: [],
       chats: [],
-      reconectar: []
+      reconectar: [],
+      toke: ''
     };
   },
   computed: {
-    ...mapGetters(['loadingPage', 'modalEdit', 'cookieUserJson']),
+    ...mapGetters(['loadingPage', 'modalEdit']),
     listRoomComputed: {
       get() {
         return this.listRoom;
@@ -120,7 +121,7 @@ export default {
 
         this.listRoom.push(room);
         this.mensagemParticular.push('');
-        let payload = { token: this.cookieUserJson, room :  room }
+        let payload = { token: this.token, room :  room }
         let response = await axios.post('/api/mensagens', payload );
 
         if (response.data.length > 0) {
@@ -166,6 +167,7 @@ export default {
     }
   },
   mounted() {
+    this.token = this.$cookies.get("token")
     this.criarUsuario();
   },
   created: function() {
@@ -231,7 +233,7 @@ export default {
       if (this.listRoom.indexOf(msg.room) === -1) {
         this.listRoom.push(msg.room);
         this.chats.push(msg.from);
-        let payload = { token: this.cookieUserJson, room :  msg.room }
+        let payload = { token: this.token, room :  msg.room }
         let response = await axios.post('/api/mensagens', payload );
         if (response.data.length > 0) {
           this.messages = this.messages.concat(response.data);
