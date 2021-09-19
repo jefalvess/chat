@@ -9,12 +9,7 @@
 
         <template>
           <cv-side-nav id="side-nav" rail>
-            <cv-side-nav-items>
-                <cv-side-nav-link href="javascript:void(0)">
-                  Usuario Conectados
-                </cv-side-nav-link>
-              
-            </cv-side-nav-items>
+            <chat />
           </cv-side-nav>
         </template>
 
@@ -28,12 +23,12 @@
 </template>
 
 <script>
-// const chat = () => import('./perfil/chat.vue');
+const chat = () => import('./perfil/chat.vue');
 
 export default {
   name: 'header-page',
   components: {
-    // chat
+    chat
   },
   methods: {
     redirect() {
