@@ -1,28 +1,17 @@
 <template>
-  <div
-    class="bx--col"
-  >
-    <div class="bx--row">
-      <p style="font-size: 22px;"> Escrever um texto </p>
+  <div class="bx--col">
+     <div style="margin-top: 3rem; display: flex; align-items: center; justify-content: center " class="bx--row">
+         <cv-text-area light="light" maxlength="50" placeholder="No que voce esta pensando" v-model="textoInput"> </cv-text-area>    
     </div>
-
-     <div class="bx--row">
-         <cv-text-area
-           MAXLENGTH="50"
-           v-model="textoInput">
-           </cv-text-area>    
-    </div>
-    <div class="bx--row">
+    <div style="margin-top: 3rem; display: flex; justify-content: right; margin-top: 1rem;" class="bx--row">
      {{ textoInput.length }} | 50
     </div> 
 
-    <div style="margin-top: 1rem;" class="bx--row">
+    <div style="margin-top: 1rem; margin-top: 3rem; display: flex; justify-content: right; margin-top: 1rem;" class="bx--row">
       <cv-button @click="postTimeLine()" >
-         Enviar mensagem
+         Publicar
        </cv-button>
-
     </div> 
-
     <div v-for="(item , index) in listTimeLineDataComputed" v-bind:key="index" class="bx--row">
           <cv-tile>
             <h2>{{ item.texto }}</h2>
@@ -30,7 +19,6 @@
             <p>Horario: {{ item.order }} </p>
           </cv-tile>
     </div> 
-
   </div>
 </template>
 
@@ -84,7 +72,6 @@ export default {
       }, 1000 * 60 * 60);
 
     }
-
   },
   mounted() {
     this.token = this.$cookies.get("token")
@@ -93,3 +80,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+
+.bx--text-area {
+  height: 7rem;
+}
+</style>

@@ -11,7 +11,6 @@ router.post('/token/user', validateUserToken,  async  (req, res) => {
 });
 
 router.post('/mensagens', validateUserToken,  async  (req, res) => {
-  console.log(req.body)
   let room = req.body.room; 
   let response = await mongoDB.query({ room: room });
   return res.status(200).json(response);
