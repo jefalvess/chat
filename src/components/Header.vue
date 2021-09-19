@@ -28,12 +28,12 @@
 </template>
 
 <script>
-const chat = () => import('./perfil/chat.vue');
+// const chat = () => import('./perfil/chat.vue');
 
 export default {
   name: 'header-page',
   components: {
-    chat
+    // chat
   },
   methods: {
     redirect() {
