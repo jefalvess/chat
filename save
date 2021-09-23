@@ -1,8 +1,0 @@
- <cv-header aria-label="Carbon header">
-      <cv-header-name style="cursor: pointer" @click="redirect()" prefix="Porject">
-        Jeff 
-      </cv-header-name>
-      <template slot="header-global">
-        <p style="cursor: pointer" @click="logoff()" class="confidential"> Sair </p>
-      </template>
-    </cv-header>
