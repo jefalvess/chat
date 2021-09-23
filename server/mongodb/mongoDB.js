@@ -34,5 +34,23 @@ module.exports = {
           reject(error);
         }
       });
-    }
+    },
+    updateDocument(antigo, novo) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          resolve(await collection.updateOne(antigo, { $set: novo }));
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
+    deleteDocument(doc) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          resolve(await collection.deleteMany(doc))
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
   };

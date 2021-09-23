@@ -3,8 +3,11 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 const perfil = () => import('@/components/perfil/page.vue');
+const perfilEdit = () => import('@/components/perfilEdit/page.vue');
+const timeline = () => import('@/components/timeline/page.vue');
 const create = () => import('@/components/create/page.vue');
 const login = () => import('@/components/login/page.vue');
+const chat = () => import('@/components/chat/page.vue');
 
 // import textProposal from '@/systemPages/hw/textEditor/textProposal.vue';
 // 
@@ -17,7 +20,10 @@ export default new Router({
     // Proposals
     { path: '/', abstract: true, component: login },
     { path: '/create', abstract: true, component: create },
+    { path: '/timeline', abstract: true, component: timeline },
     { path: '/perfil', abstract: true, component: perfil },
+    { path: '/perfil/edit', abstract: true, component: perfilEdit },
+    { path: '/chat', abstract: true, component: chat },
     { path: '/*', redirect: '/' },
   ]
 });

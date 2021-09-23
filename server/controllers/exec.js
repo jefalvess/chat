@@ -110,4 +110,35 @@ router.post('/create/timeline', validateUserToken,  async  (req, res) => {
 
 });
 
+
+
+
+router.post('/perfil',  validateUserToken,  async  (req, res) => {
+  
+  let perfil = await mongoDB.query({ usuario: req.user.usuario, type : "perfil" });
+  return res.status(200).json( { status: true, perfil: perfil[0] } );
+
+});
+
+
+
+router.post('/perfil/edit',  validateUserToken,  async  (req, res) => {
+
+
+  let perfil = await mongoDB.query({ usuario: req.user.usuario, type : "perfil" });
+
+  let novoDocument = { 
+      nome  : req.body.perfil.nome,
+      trabalho : req.body.perfil.trabalho,
+      education :  req.body.perfil.education,
+      estadoCivil :  req.body.perfil.estadoCivil,
+      email  :  req.body.perfil.email,
+    }
+  
+  let response = await mongoDB.updateDocument(perfil[0], novoDocument);
+  
+  return res.status(200).json( { status: true, mensagem: response } );
+
+});
+
 module.exports = router;

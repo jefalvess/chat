@@ -3,14 +3,16 @@ const state = {
   loadingPage: [],
   idDocument: '',
   modalEdit: '',
-  responseLogic: []
+  responseLogic: [],
+  chamarChat: 'teste teste teste'
 };
 const getters = {
   cookieUserJson: state => state.cookieUserJson,
   loadingPage: state => state.loadingPage,
   idDocument: state => state.idDocument,
   modalEdit: state => state.modalEdit,
-  responseLogic: state => state.responseLogic
+  responseLogic: state => state.responseLogic,
+  chamarChat: state => state.chamarChat
 };
 const mutations = {
   setCookieUserJson: (state, payload) => {
@@ -18,6 +20,9 @@ const mutations = {
   },
   setLoadingPage: (state, payload) => {
     state.loadingPage = payload;
+  },
+  setChamarChat: (state, payload) => {
+    state.chamarChat = payload;
   },
   setIdDocument: (state, payload) => {
     state.idDocument = payload;
@@ -35,6 +40,9 @@ const actions = {
   },
   setLoadingPage({ commit }, payload) {
     commit('setLoadingPage', payload);
+  },
+  setChamarChat({ commit }, payload) {
+    commit('setChamarChat', payload);
   },
   setIdDocument({ commit }, payload) {
     commit('setIdDocument', payload);

@@ -72,7 +72,7 @@ export default {
       this.$cookies.set("token", data.token , "8h")
       this.setCookieUserJson(data.token)
       this.setModalEdit(data.usuario);
-      this.$router.push('/perfil');
+      this.$router.push('/timeline');
 
     },
     login () { 

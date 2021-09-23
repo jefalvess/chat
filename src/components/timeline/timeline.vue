@@ -1,23 +1,46 @@
 <template>
   <div class="bx--col">
      <div style="margin-top: 3rem; display: flex; align-items: center; justify-content: center " class="bx--row">
-         <cv-text-area light="light" maxlength="50" placeholder="No que voce esta pensando" v-model="textoInput"> </cv-text-area>    
+         <cv-text-area light="light" maxlength="280" placeholder="No que voce esta pensando" v-model="textoInput"> </cv-text-area>    
     </div>
     <div style="margin-top: 3rem; display: flex; justify-content: right; margin-top: 1rem;" class="bx--row">
-     {{ textoInput.length }} | 50
+     {{ textoInput.length }} | 280
     </div> 
 
-    <div style="margin-top: 1rem; margin-top: 3rem; display: flex; justify-content: right; margin-top: 1rem;" class="bx--row">
+    <div style="margin-bottom: 1rem; margin-top: 4rem;  display: flex; justify-content: right; margin-top: 1rem;" class="bx--row">
       <cv-button @click="postTimeLine()" >
          Publicar
        </cv-button>
     </div> 
-    <div v-for="(item , index) in listTimeLineDataComputed" v-bind:key="index" class="bx--row">
-          <cv-tile>
-            <h2>{{ item.texto }}</h2>
-            <p>Postado: {{ item.usuario }}</p>
-            <p>Horario: {{ item.order }} </p>
-          </cv-tile>
+     <div class="bx--col--lg" style= "margin-left: -1rem; margin-right: -1.5rem;" >
+      <div lass="bx--col--lg" v-for="(item , index) in listTimeLineDataComputed" v-bind:key="index" style="background-color: white; margin-top: 2rem; margin-bottom: 2rem; border-radius: 25px; padding: 1rem 1rem 1rem 1rem;">
+              <div  class="bx--row" > 
+
+               <div style="padding: 0rem 0rem 0rem 1rem;" class="bx--col" > 
+                    {{ item.order | date }}
+                </div>
+
+                 <div style="padding: 0rem 0rem 0rem 1rem;" class="bx--col" > 
+
+                 <TrashCan style=" float: right;" />
+
+                 </div>
+          
+              </div> 
+              <div class="bx--row" > 
+               <div style="padding: 1rem 1rem;" class="bx--col" > 
+              <h3>{{ item.texto }}</h3>
+              </div> 
+              </div> 
+              <div  class="bx--row" > 
+                   <div style="padding: 0rem 0rem 0rem 1rem;" class="bx--col" > 
+                   <p style= "font-size: 14px; ">Postado: {{ item.usuario }}</p> 
+                   </div> 
+              </div> 
+             
+    
+      </div> 
+          
     </div> 
   </div>
 </template>
@@ -25,6 +48,8 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
+import TrashCan from '@carbon/icons-vue/es/trash-can/20';
+
 
 export default {
   name: 'timeline',
@@ -43,9 +68,11 @@ export default {
       }
     },
   },
+  components: { 
+   TrashCan
+  },
   methods: {
     ...mapActions(['setLoadingPage']),
-
     async buscarMensagens () { 
       let payload = { token: this.token, usuario : this.modalEdit }
        let response = await axios.post('/api/buscar/timeline', payload );
@@ -85,5 +112,11 @@ export default {
 
 .bx--text-area {
   height: 7rem;
+}
+
+.bx--accordion {
+    width: 106%;
+    list-style: none;
+    margin-left: -1rem;
 }
 </style>

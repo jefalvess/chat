@@ -1,12 +1,8 @@
 <template>
     <div style="margin-top: 6rem;" class="bx--grid">
 
-      <div  style=" height: 10rem; display: flex; align-items: center; justify-content: center " class="bx--row">
-         <img style="width: 10rem; height: 10rem; border-radius: 50%;" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png">
-      </div>
-
-      <div @click="editFoto()" style=" height: 2rem; display: flex; align-items: center; justify-content: center;" class="bx--row">
-          Editar Foto 
+      <div  style=" display: flex; align-items: center; justify-content: center " class="bx--row">
+         Editando dados do seu perfil de usuario 
       </div>
 
       <div style="padding-top: 2.6rem; height: 3rem; display: flex; align-items: center; justify-content: center;" class="bx--row">
@@ -14,8 +10,7 @@
       </div>
 
       <div style=" display: flex; align-items: center; justify-content: center;" class="bx--row">
-     
-          <cv-text-input readonly  v-model="perfilData.nome"> </cv-text-input>
+         <cv-text-input  v-model="perfilData.nome"> </cv-text-input>
       </div>
 
       <div style="padding-top: 2.6rem; height: 3rem; display: flex; align-items: center; justify-content: center;" class="bx--row">
@@ -23,8 +18,7 @@
       </div>
 
       <div style=" display: flex; align-items: center; justify-content: center;" class="bx--row">
-
-          <cv-text-input readonly  v-model="perfilData.trabalho"> </cv-text-input>
+         <cv-text-input  v-model="perfilData.trabalho"> </cv-text-input>
       </div>
      
       <div style="padding-top: 2.6rem; height: 3rem; display: flex; align-items: center; justify-content: center;" class="bx--row">
@@ -32,8 +26,7 @@
       </div>
 
       <div style=" display: flex; align-items: center; justify-content: center;" class="bx--row">
-
-          <cv-text-input readonly  v-model="perfilData.education"> </cv-text-input>
+         <cv-text-input  v-model="perfilData.education"> </cv-text-input>
       </div>
 
 
@@ -41,30 +34,28 @@
         Estado Civil 
       </div>
 
-       <div style=" display: flex; align-items: center; justify-content: center;" class="bx--row">
-
-           <cv-text-input readonly  v-model="perfilData.estadoCivil"> </cv-text-input>
+       <div style="h display: flex; align-items: center; justify-content: center;" class="bx--row">
+         <cv-text-input  v-model="perfilData.estadoCivil"> </cv-text-input>
       </div>
 
       <div style="padding-top: 2.6rem; height: 3rem; display: flex; align-items: center; justify-content: center;" class="bx--row">
          Email 
       </div>
 
-      <div style="display: flex; align-items: center; justify-content: center;" class="bx--row">
-  
-          <cv-text-input readonly  v-model="perfilData.email"> </cv-text-input>
+      <div style=" display: flex; align-items: center; justify-content: center;" class="bx--row">
+        <cv-text-input  v-model="perfilData.email"> </cv-text-input>
       </div>
 
- 
+      <div style="padding-top: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;" class="bx--row"> 
+          <cv-button @click="saveEditPerfil()" > Salvar </cv-button>
+      </div>
 
-         <div style="padding-top: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center;" class="bx--row"> 
-          <cv-button @click="editPerfil()" > Editar Perfil </cv-button>
-         </div>
+      <div style="padding-top: 4rem; height: 2rem; display: flex; align-items: center; justify-content: center;" class="bx--row"> 
+          <cv-button  kind="secondary"  @click="cancel()" > Cancelar </cv-button>
+      </div>
 
 
-          <div style="padding-top: 4rem; height: 2rem; display: flex; align-items: center; justify-content: center;" class="bx--row"> 
-          <cv-button  kind="secondary" @click="timeline()" > timeline </cv-button>
-          </div>
+          
 
     </div>
 </template>
@@ -86,29 +77,20 @@ export default {
   },
   methods: {
     // ir para pagina de perfil
-    async paginaPerfil() {
-      this.$router.push('/perfil');
-    },
     async getPerfil () { 
-
       let payload = { token: this.token }
       let response = await axios.post('/api/perfil', payload );
       this.perfilData  = response.data.perfil
 
     }, 
-    async editPerfil() { 
-
-      this.$router.push('/perfil/edit');
-
-    },
-    async editFoto () { 
-
-      alert();
+    async saveEditPerfil() { 
+      let payload = { token: this.token, perfil : this.perfilData }
+      await axios.post('/api/perfil/edit', payload );
+      this.$router.push('/perfil');
 
     },
-    async timeline () { 
-
-      this.$router.push('/timeline');
+    async cancel() { 
+      this.$router.push('/perfil');
 
     }
   },
