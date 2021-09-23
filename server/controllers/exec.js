@@ -4,6 +4,7 @@ const jwt = require('../jwt');
 const { validateUserToken } = require("./authenticator.js");
 const FormData = require('form-data');
 const upload = require('./upload')
+const ObjectID = require('mongodb').ObjectID;
 
 const uploadMiddleware = upload.uploadMiddleware;
 
@@ -107,7 +108,8 @@ router.post('/create/timeline', validateUserToken,  async  (req, res) => {
     data: new Date (),
     type : "post",
     texto: req.body.texto,
-    order: Date.now()
+    order: Date.now(),
+    nomeFoto: req.user.nomeFoto
   }
 
   mongoDB.insertDocument([ novoDocument ])
@@ -129,8 +131,8 @@ router.post('/buscar/timeline', validateUserToken,  async  (req, res) => {
 
 // Deletar um post
 router.post('/delete/post',  validateUserToken,  async  (req, res) => {
-
-  mongoDB.deleteDocument( { _id : ObjectId(req.body.id) }  );
+  console.log(req.body.id)
+  mongoDB.deleteDocument( { _id : ObjectID(req.body.id) }  );
   return res.status(200).json( { status: true, mensagem: 'deletado com sucesso ' } );
 
 });
