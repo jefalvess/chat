@@ -11,22 +11,23 @@
     >
       <img
         style="width: 10rem; height: 10rem; border-radius: 50%"
-        v-bind:src="fotoComputed"
+        v-bind:src="'static/' + perfilData.usuario + '.png'"
       />
     </div>
 
-    <div v-if="flagEdit"
-     style="
+    <div
+      v-if="flagEdit"
+      style="
         padding-top: 2.6rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer
+        cursor: pointer;
       "
       class="bx--row"
     >
       <cv-file-uploader
-      style="    max-width: 20rem;"
+        style="max-width: 20rem"
         accept=".jpg,.png"
         v-model="uploadedFiles"
         :multiple="false"
@@ -37,26 +38,35 @@
       </cv-file-uploader>
     </div>
 
-     <div v-if="flagEdit === false" style="
+    <div
+      v-if="flagEdit === false"
+      style="
         padding-top: 2.6rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer
+        cursor: pointer;
       "
-      class="bx--row" @click="flagEdit = true">
-      Editar Foto 
+      class="bx--row"
+      @click="flagEdit = true"
+    >
+      Editar Foto
     </div>
 
-    <div v-if="flagEdit" style="
+    <div
+      v-if="flagEdit"
+      style="
         padding-top: 2.6rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer
+        cursor: pointer;
       "
-      class="bx--row"  @click="submitForm()">
-      Salvar foto
+      class="bx--row"
+    >
+      <cv-button kind="secondary" @click="submitForm()">
+        Salvar foto
+      </cv-button>
     </div>
 
     <div
@@ -198,16 +208,11 @@ export default {
       token: '',
       perfilData: [],
       uploadedFiles: [],
-      flagEdit:  false
+      flagEdit: false,
     };
   },
   computed: {
     ...mapGetters(['modalEdit']),
-    fotoComputed: {
-      get() {
-        return 'static/' + this.perfilData.nomeFoto;
-      },
-    },
   },
   methods: {
     // ir para pagina de perfil
@@ -226,24 +231,20 @@ export default {
       this.$router.push('/timeline');
     },
     async submitForm() {
-      
       if (this.uploadedFiles.length === 0) {
-         return this.flagEdit = false;
+        return (this.flagEdit = false);
       }
 
       let formData = new FormData();
       formData.append('usuario', this.perfilData.usuario);
       formData.append('token', this.token);
-      formData.append('nomeFoto', this.perfilData.nomeFoto);
-
-      
 
       if (this.uploadedFiles.length > 0) {
         for (let file of this.uploadedFiles) {
           formData.append('files', file.file);
         }
       }
-     
+
       await axios
         .post('/api/upload/file', formData, {
           headers: {
@@ -251,8 +252,8 @@ export default {
             token: this.token,
           },
         })
-        .then(response => {
-          console.log(response.data)
+        .then((response) => {
+          console.log(response.data);
           document.location.reload(true);
         });
     },
@@ -260,7 +261,6 @@ export default {
   mounted() {
     this.token = this.$cookies.get('token');
     this.getPerfil();
-
   },
 };
 </script>

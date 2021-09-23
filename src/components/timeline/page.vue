@@ -8,9 +8,6 @@
       <div style="overflow: auto; height: 100vh;" class="bx--col-lg-8">
         <timeline />
       </div>
-      <div class="bx--col-lg-1">
-        Novidades
-     </div>
     </div>
   </div>
 </template>

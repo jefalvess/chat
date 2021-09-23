@@ -7,7 +7,7 @@ const validateUserToken = (req, res, next) => {
         const validated = token? jwt.verify(token, process.env.JWT_KEY): false;
 
         if (!validated) {
-            console.log('TOKEN EXPIRADO')
+            console.log('TOKEN EXPIRADO') 
             return res.status(400).json({ status: false, message: "[ INVALID TOKEN - JWT ]" });
         }
 
@@ -18,7 +18,7 @@ const validateUserToken = (req, res, next) => {
             return res.status(400).json({ status: false, message: "[ INVALID ACCESS - JWT]" });
         }
     
-        req.user =  { status: true, usuario: userInfo.usuario, token: token, nomeFoto: userInfo.nomeFoto }
+        req.user =  { status: true, usuario: userInfo.usuario, token: token }
 
         next();
 

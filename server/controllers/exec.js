@@ -2,19 +2,19 @@ const express = require('express');
 const mongoDB = require('../mongodb/mongoDB.js');
 const jwt = require('../jwt');
 const { validateUserToken } = require("./authenticator.js");
-const FormData = require('form-data');
 const upload = require('./upload')
 const ObjectID = require('mongodb').ObjectID;
+const path = require('path')
 
 const uploadMiddleware = upload.uploadMiddleware;
 
 const router = express.Router();
+const fs = require('fs');
 
 // Criar novo token de acesso
 router.post('/token/user', validateUserToken,  async  (req, res) => {
-  console.log(req.user)
-  let token = await jwt.sign(JSON.stringify({ usuario: req.user.usuario, nomeFoto: req.user.nomeFoto, usuarioChat: true }));
-  return res.status(200).json( { status: true, usuario: req.user.usuario, token: token,  nomeFoto: req.user.nomeFoto } );
+  let token = await jwt.sign(JSON.stringify({ usuario: req.user.usuario,  usuarioChat: true }));
+  return res.status(200).json( { status: true, usuario: req.user.usuario, token: token } );
 });
 
 // Mensagens do chat
@@ -49,7 +49,16 @@ router.post('/create/user', async  (req, res) => {
       }
   }
 
-  let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, nomeFoto: 'example.png',  usuarioChat: true } ));
+  let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario,  usuarioChat: true } ));
+
+
+  
+
+  // File destination.txt will be created or overwritten by default.
+  fs.copyFile(path.join(__dirname,'/../uploads/example.png'), path.join(__dirname,'/../uploads/' + req.body.usuario + ".png") , (err) => {
+    if (err) throw err;
+    console.log('source.txt was copied to destination.txt');
+  });
 
   let novoDocument = { 
     data: new Date (),
@@ -60,7 +69,6 @@ router.post('/create/user', async  (req, res) => {
     education :  '',
     estadoCivil :  '',
     email  : '',
-    nomeFoto: 'example.png',
     type: "perfil",
     status: true
   }
@@ -88,8 +96,8 @@ router.post('/login/user', async  (req, res) => {
   let buscarUsuario = await mongoDB.query({ usuario: req.body.usuario, type : "perfil" });
   if ( buscarUsuario.length > 0 ) { 
       if (buscarUsuario[0].usuario === req.body.usuario && buscarUsuario[0].senha === req.body.senha ) { 
-        let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, usuarioChat: true, nomeFoto : buscarUsuario[0].nomeFoto }));
-        return res.status(200).json( { status: true, usuario: buscarUsuario[0].usuario, token: token, nomeFoto : buscarUsuario[0].nomeFoto } );
+        let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, usuarioChat: true }));
+        return res.status(200).json( { status: true, usuario: buscarUsuario[0].usuario, token: token } );
       }
   }
 
@@ -108,8 +116,7 @@ router.post('/create/timeline', validateUserToken,  async  (req, res) => {
     data: new Date (),
     type : "post",
     texto: req.body.texto,
-    order: Date.now(),
-    nomeFoto: req.user.nomeFoto
+    order: Date.now()
   }
 
   mongoDB.insertDocument([ novoDocument ])
@@ -168,13 +175,6 @@ router.post('/perfil/edit',  validateUserToken,  async  (req, res) => {
 // Editar foto de perfil 
 router.post('/upload/file', uploadMiddleware, validateUserToken, async  (req, res) => {
   let uploadErrors = upload.uploadErrors;
-  let perfil = await mongoDB.query({ usuario: req.user.usuario, type : "perfil" });
-  if (perfil[0].nomeFoto === 'example.png' || perfil[0].nomeFoto !== req.files[0].filename ) {
-       let novoDocument = { 
-          nomeFoto : req.files[0].filename
-       }
-    await mongoDB.updateDocument(perfil[0], novoDocument);
-  }
   return res.status(200).json({ status: true } );
 });
 

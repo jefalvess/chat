@@ -55,11 +55,9 @@
         "
       >
         <div class="bx--row">
-          <div style="padding: 0rem 0rem 0rem 1rem" class="bx--col--lg">
-            <img
-              style="width: 2rem; height: 2rem; border-radius: 50%"
-              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-            />
+          <div v-if="item.usuario !== 'undefined' " 
+          style="padding: 0rem 0rem 0rem 1rem" class="bx--col--lg">         
+               <img   style="width: 2rem; height: 2rem; border-radius: 50%" v-bind:src="'static/'+ item.usuario + '.png'" />
           </div>
 
           <div
@@ -108,7 +106,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['modalEdit']),
+    ...mapGetters(['modalEdit', 'modalUser']),
     listTimeLineDataComputed: {
       get() {
         return this.timelineData;
@@ -138,7 +136,7 @@ export default {
         this.timelineData.splice(0, 0, {
           usuario: this.modalEdit,
           texto: this.textoInput,
-          order: Date.now(),
+          order: Date.now()
         });
         this.textoInput = '';
       }
