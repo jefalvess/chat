@@ -47,8 +47,9 @@ module.exports = {
     deleteDocument(doc) {
       return new Promise(async (resolve, reject) => {
         try {
-          resolve(await collection.deleteMany(doc))
+          resolve(await collection.deleteOne(doc))
         } catch (error) {
+          console.log(error)
           reject(error);
         }
       });

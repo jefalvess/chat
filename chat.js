@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const history = require('connect-history-api-fallback');
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser')
 dotenv.config();
 
 //Create a new server
@@ -14,4 +15,6 @@ app.use(history());
 app.use(staticFileMiddleware);
 
 app.use('/', express.static('./dist'));
+app.use('/static', express.static(__dirname + '/server/uploads'));
+
 require('./server/server')(app);
