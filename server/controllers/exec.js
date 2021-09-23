@@ -84,6 +84,10 @@ router.post('/create/user', async  (req, res) => {
 // Tentar login
 router.post('/login/user', async  (req, res) => {
 
+
+  console.log(req.body.usuario)
+  console.log(req.body.senha)
+
   if (!req.body.usuario) { 
     return res.status(200).json( { status: false, mensagem: 'Usuario com erro' } );
   }
