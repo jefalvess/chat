@@ -16,10 +16,10 @@
     "watch": "vue-cli-service build --mode development --watch",
     "nodemon": "nodemon chat.js",
     "dev": "concurrently --kill-others \"npm:watch\" \"npm:nodemon\"",
-    "start:prod": "vue-cli-service build --mode production && node app.js",
-    "start:qa": "vue-cli-service build --mode test && node app.js",
-    "start:dev": "vue-cli-service --mode development build && node app.js",
-    "start": "node app.js"
+    "start:prod": "vue-cli-service build --mode production && node chat.js",
+    "start:qa": "vue-cli-service build --mode test && node chat.js",
+    "start:dev": "vue-cli-service --mode development build && node chat.js",
+    "start": "node chat.js"
   },
   "dependencies": {
     "@carbon/icons-vue": "^10.6.1",
@@ -138,6 +138,6 @@
     "url": "https://github.com/carbon-design-system/carbon-tutorial-vue/issues"
   },
   "homepage": "https://github.com/carbon-design-system/carbon-tutorial-vue#readme",
-  "main": "app.js",
+  "main": "chat.js",
   "keywords": []
 }
