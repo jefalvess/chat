@@ -11,8 +11,9 @@ const router = express.Router();
 
 // Criar novo token de acesso
 router.post('/token/user', validateUserToken,  async  (req, res) => {
-  let token = await jwt.sign(JSON.stringify({ usuario: req.user.usuario, usuarioChat: true }));
-  return res.status(200).json( { status: true, usuario: req.user.usuario, token: token } );
+  console.log(req.user)
+  let token = await jwt.sign(JSON.stringify({ usuario: req.user.usuario, nomeFoto: req.user.nomeFoto, usuarioChat: true }));
+  return res.status(200).json( { status: true, usuario: req.user.usuario, token: token,  nomeFoto: req.user.nomeFoto } );
 });
 
 // Mensagens do chat
@@ -47,19 +48,20 @@ router.post('/create/user', async  (req, res) => {
       }
   }
 
-  let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, usuarioChat: true } ));
+  let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, nomeFoto: 'example.png',  usuarioChat: true } ));
 
   let novoDocument = { 
     data: new Date (),
     senha : req.body.senha,
     usuario : req.body.usuario,
-    status: true, 
-    nome  : '',
-    trabalho : req.body.perfil.trabalho,
-    education :  req.body.perfil.education,
-    estadoCivil :  req.body.perfil.estadoCivil,
-    email  :  req.body.perfil.email,
-    nameFoto: false
+    nome  : req.body.nome,
+    trabalho : '',
+    education :  '',
+    estadoCivil :  '',
+    email  : '',
+    nomeFoto: 'example.png',
+    type: "perfil",
+    status: true
   }
 
   await mongoDB.insertDocument([ novoDocument])
@@ -85,8 +87,8 @@ router.post('/login/user', async  (req, res) => {
   let buscarUsuario = await mongoDB.query({ usuario: req.body.usuario, type : "perfil" });
   if ( buscarUsuario.length > 0 ) { 
       if (buscarUsuario[0].usuario === req.body.usuario && buscarUsuario[0].senha === req.body.senha ) { 
-        let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, usuarioChat: true }));
-        return res.status(200).json( { status: true, usuario: buscarUsuario[0].usuario, token: token } );
+        let token = await jwt.sign(JSON.stringify({ usuario: req.body.usuario, usuarioChat: true, nomeFoto : buscarUsuario[0].nomeFoto }));
+        return res.status(200).json( { status: true, usuario: buscarUsuario[0].usuario, token: token, nomeFoto : buscarUsuario[0].nomeFoto } );
       }
   }
 
@@ -105,8 +107,7 @@ router.post('/create/timeline', validateUserToken,  async  (req, res) => {
     data: new Date (),
     type : "post",
     texto: req.body.texto,
-    order: Date.now(),
-    foto: req.body.nameFoto
+    order: Date.now()
   }
 
   mongoDB.insertDocument([ novoDocument ])
@@ -138,7 +139,7 @@ router.post('/delete/post',  validateUserToken,  async  (req, res) => {
 
 
 // Puxar infomaçoes do perfil
-router.post('/perfil',  validateUserToken,  async  (req, res) => {
+router.post('/perfil',  validateUserToken,  async (req, res) => {
   let perfil = await mongoDB.query({ usuario: req.user.usuario, type : "perfil" });
   return res.status(200).json( { status: true, perfil: perfil[0] } );
 });
@@ -165,28 +166,15 @@ router.post('/perfil/edit',  validateUserToken,  async  (req, res) => {
 // Editar foto de perfil 
 router.post('/upload/file', uploadMiddleware, validateUserToken, async  (req, res) => {
   let uploadErrors = upload.uploadErrors;
-
   let perfil = await mongoDB.query({ usuario: req.user.usuario, type : "perfil" });
-  let novoDocument = { 
-      nameFoto: req.files[0].filename
+  if (perfil[0].nomeFoto === 'example.png' || perfil[0].nomeFoto !== req.files[0].filename ) {
+       let novoDocument = { 
+          nomeFoto : req.files[0].filename
+       }
+    await mongoDB.updateDocument(perfil[0], novoDocument);
   }
-
-  mongoDB.updateDocument(perfil[0], novoDocument);
-  return res.status(200).json( { status: true, nameFoto: req.files[0].filename } );
-
+  return res.status(200).json({ status: true } );
 });
 
-
-
-// Editar foto de perfil 
-router.post('/teste/teste', uploadMiddleware, validateUserToken, async  (req, res) => {
-  
-  let response = await mongoDB.query({ usuario: 'Daniele', type : "perfil" });
-
-  console.log(response)
-
-  return res.status(200).json( { status: true, nameFoto: req.files[0].filename } );
-
-});
 
 module.exports = router;

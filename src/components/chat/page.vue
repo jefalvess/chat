@@ -19,19 +19,18 @@
             </div>  
         </div>
         
-         <!-- Chat -->
+
         <div class="bx--col">
-           
           <div class="bx--row" v-bind:key="room" v-for="(room, id) in listRoomComputed" style="width: 17rem;border: 1px solid black;min-height: 17.5rem;max-height: 17.5rem; margin-top: 2rem;" >
             <div class="bx--col">
+              <!-- id / botao de eliminar  -->
               <div class="bx--row">
                 <div style="width: 80%; padding-top: 0.5rem; padding-bottom: 0.5rem;" lass="bx--col--lg">ID CHAT : {{ room }}</div>
                 <div @click="minimizeChat(room, id)" class="bx--col" style="cursor: pointer; font-size: 1.3rem;" >
                   x
                 </div>
               </div>
-
-              <!-- Chat -->
+              <!-- Mensagens -->
               <div class="bx--row" style="overflow: auto; flex-direction: column-reverse; min-height: 13.5rem; max-height: 13.5rem;" >
                 <div class="bx--col">
                   <div

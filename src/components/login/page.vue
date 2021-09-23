@@ -61,7 +61,7 @@ export default {
     ...mapGetters(['modalEdit']),
   },
   methods: {
-    ...mapActions(['setModalEdit', 'setCookieUserJson']),
+    ...mapActions(['setModalEdit', 'setCookieUserJson', 'setModalUser']),
     // Criar usuario / Login
     async createUser() {
       let payload = { usuario : this.usuario, senha: this.senha }; 
@@ -80,6 +80,7 @@ export default {
       this.$cookies.set("token", data.token , "8h")
       this.setCookieUserJson(data.token)
       this.setModalEdit(data.usuario);
+      this.setModalUser(data);
       this.$router.push('/timeline');
     },
     criarUsuario(){

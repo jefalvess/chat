@@ -18,7 +18,7 @@ const validateUserToken = (req, res, next) => {
             return res.status(400).json({ status: false, message: "[ INVALID ACCESS - JWT]" });
         }
     
-        req.user =  { status: true, usuario: userInfo.usuario, token: token }
+        req.user =  { status: true, usuario: userInfo.usuario, token: token, nomeFoto: userInfo.nomeFoto }
 
         next();
 

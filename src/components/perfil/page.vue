@@ -1,23 +1,6 @@
 <template>
   <div style="margin-top: 6rem" class="bx--grid">
     <div
-      v-if="typeof perfilData.nameFoto === false"
-      style="
-        height: 10rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      "
-      class="bx--row"
-    >
-      <img
-        style="width: 10rem; height: 10rem; border-radius: 50%"
-        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-      />
-    </div>
-
-    <div
-      v-else
       style="
         height: 10rem;
         display: flex;
@@ -222,7 +205,7 @@ export default {
     ...mapGetters(['modalEdit']),
     fotoComputed: {
       get() {
-        return 'static/' + this.perfilData.nameFoto;
+        return 'static/' + this.perfilData.nomeFoto;
       },
     },
   },
@@ -248,11 +231,12 @@ export default {
          return this.flagEdit = false;
       }
 
-      this.perfilData.nameFoto = false;
-      
       let formData = new FormData();
       formData.append('usuario', this.perfilData.usuario);
       formData.append('token', this.token);
+      formData.append('nomeFoto', this.perfilData.nomeFoto);
+
+      
 
       if (this.uploadedFiles.length > 0) {
         for (let file of this.uploadedFiles) {
@@ -267,7 +251,8 @@ export default {
             token: this.token,
           },
         })
-        .then((response) => {
+        .then(response => {
+          console.log(response.data)
           document.location.reload(true);
         });
     },
@@ -275,6 +260,7 @@ export default {
   mounted() {
     this.token = this.$cookies.get('token');
     this.getPerfil();
+
   },
 };
 </script>
