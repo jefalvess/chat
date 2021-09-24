@@ -1,8 +1,8 @@
 <template>
   <div class="bx--grid">
     <div class="bx--row">
-      <div class="bx--col">
-        <div class="bx--row">
+      <div class="bx--col-lg-2">
+        <div style="padding-top: 2rem;padding-bottom: 2rem;" class="bx--row">
           <p style="padding-left: 1rem; cursor: pointer">Bate-papos</p>
         </div>
 
@@ -11,10 +11,9 @@
           class="bx--row"
           v-for="user in historicoComputed"
           v-bind:key="user.chatCom"
+          style="height: 3.6rem;" 
         >
           <div
-            v-if="user.user_id !== modalEdit"
-            v-bind:id="user.user_id"
             style="padding-left: 1rem"
             class="bx--col--lg"
           >
@@ -25,44 +24,48 @@
           </div>
 
           <div
-            v-if="user.user_id !== modalEdit"
-            v-bind:id="user.user_id"
             style="padding-top: 0.3rem; padding-left: 0.5rem"
             class="bx--col--lg"
           >
+            <div class="bx--row">
+              <p
+                v-if="user.chatcom !== modalEdit"
+                v-bind:id="user.chatcom"
+                v-on:click="createRoom(user.chatcom)"
+                style="padding-left: 1rem; cursor: pointer; "
+              >
+                {{ user.chatcom }}
+              </p>
+            </div>
 
-        <div
-          class="bx--row">
-            <p
-              v-if="user.chatcom !== modalEdit"
-              v-bind:id="user.chatcom"
-              v-on:click="createRoom(user.chatcom)"
-              style="padding-left: 1rem; cursor: pointer"
-            >
-              {{ user.chatcom }}
-            </p>
-            </div> 
+            <div class="bx--row">
+            
 
-                    <div class="bx--row">
+               <p
+                v-if="user.chatcom !== modalEdit"
+                v-bind:id="user.chatcom"
+                v-on:click="createRoom(user.chatcom)"
+                style="padding-left: 1rem; cursor: pointer; font-size: 10px;"
+              >
+                   {{ user.ultimaMensagem }}
+              </p>
 
-           {{ user.ultimaMensagem }}
-
-          </div> 
+            </div>
           </div>
+        
+           <div
+              v-if="listNotificationMensagem.indexOf(user.chatcom) !== -1"
+              class="bx--col--lg"
+              style="padding-top: 0.3rem; padding-left: 0.5rem;"
+            >
+              <ChatIco />
+            </div>
+
         </div>
       </div>
       <div class="bx--col">
-        <div
-          class="bx--row"
-          style="
-            width: 17rem;
-            border: 1px solid black;
-            min-height: 17.5rem;
-            max-height: 17.5rem;
-            margin-top: 2rem;
-          "
-        >
-          <div class="bx--col">
+        <div class="bx--row">
+          <div  style="border: 1px solid;" class="bx--col">
             <!-- id / botao de eliminar  -->
             <div class="bx--row">
               <div
@@ -78,8 +81,7 @@
               style="
                 overflow: auto;
                 flex-direction: column-reverse;
-                min-height: 13.5rem;
-                max-height: 13.5rem;
+                height: 43.5rem;
               "
             >
               <div class="bx--col">
@@ -88,23 +90,29 @@
                   v-for="(message, index) in messages"
                   v-bind:key="index"
                 >
-                  <div>
-                    <div>
-                      <span class="message"
-                        >{{ message.from }}: {{ message.message }}
-                      </span>
-                    </div>
+                  <div class="bx--col--lg">
+                    <img
+                      style="width: 2rem; height: 2rem; border-radius: 50%"
+                      v-bind:src="'static/' + message.from + '.png'"
+                    />
+                  </div>
+
+                  <div
+                    style="margin-left: 0.5rem; margin-top: 0.5rem"
+                    class="bx--col--lg"
+                  >
+                    <span class="message"> {{ message.message }} </span>
                   </div>
                 </div>
               </div>
             </div>
             <!-- Botao de enviar mensagem -->
             <div class="bx--row">
-              <div class="chat-window" v-bind:id="listRoomComputed.room">
+              <div style="width: 100%" class="chat-window" v-bind:id="listRoomComputed.room">
                 <div class="body"></div>
                 <div class="footer">
                   <input
-                    style="width: 13.7rem; height: 2rem"
+                    style="width: 90%; height: 2rem;"
                     type="text"
                     v-model="mensagemParticular"
                     class="messageText"
@@ -139,6 +147,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
+import ChatIco from '@carbon/icons-vue/es/chat/20';
 // eslint-disable-next-line no-undef
 const socket = io({ transports: ['websocket'] });
 console.log('criar socket.io');
@@ -155,7 +164,11 @@ export default {
       toke: '',
       historico: [],
       chatAberto: '',
+      listNotificationMensagem: [] 
     };
+  },
+  components : {
+    ChatIco
   },
   computed: {
     ...mapGetters(['loadingPage', 'modalEdit', 'chamarChat']),
@@ -251,7 +264,7 @@ export default {
   created: function () {
     // criar chat
     socket.on('updateUserList', (response) => {
-      console.log('atualiaçao de usuarios', response);
+      console.log('atualiaçao de usuarios online', response);
 
       // // CHat que estava on e preciso reabrir conexao
       // for (let i = 0; i < this.reconectar.length; i++) {
@@ -300,13 +313,20 @@ export default {
 
     // chat foi aberto em outro lugar
     socket.on('invite', (data) => {
-      console.log('chat foi aberto');
       socket.emit('joinRoom', data);
     });
 
     // Onde chega as mensagens de outro remetente
     socket.on('message', async (msg) => {
-      console.log('CHEGOU UMA MENSAGEM ', msg);
+      if (this.listRoom === msg.room) {
+        this.messages.push({
+          room: msg.room,
+          message: msg.message,
+          from: msg.from,
+        });
+      } else { 
+        this.listNotificationMensagem.push(msg.from);
+      }
     });
   },
 };

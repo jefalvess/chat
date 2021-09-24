@@ -113,57 +113,13 @@ export default {
     this.criarUsuario();
   },
   created: function () {
-    // criar chat
+    // Usuario online
     socket.on('updateUserList', (response) => {
-      console.log('atualiaçao de usuarios');
-      // CHat que estava on e preciso reabrir conexao
-      for (let i = 0; i < this.reconectar.length; i++) {
-        // Se o chat aberto nao existir aqui
-        if (response[1].indexOf(this.reconectar[i]) === 1) {
-          console.log('preciso reconectar esse chat');
-
-          let room = '';
-          if (this.modalEdit > this.chats[i]) {
-            room = this.modalEdit + this.chats[i];
-          } else {
-            room = this.chats[i] + this.modalEdit;
-          }
-
-          let index = this.chats.indexOf(this.reconectar[i]);
-          this.minimizeChat(room, index);
-          this.createRoom(this.reconectar[i]);
-        }
-      }
-
-      // Avisar se alguem ficar of e eu tenho chat aberto;
-      for (let i = 0; i < this.chats.length; i++) {
-        // Se o chat aberto nao existir aqui
-        if (response[1].indexOf(this.chats[i]) === -1) {
-          let room = '';
-          if (this.modalEdit > this.chats[i]) {
-            room = this.modalEdit + this.chats[i];
-          } else {
-            room = this.chats[i] + this.modalEdit;
-          }
-
-          // Primeira noticaçao para o chat
-          if (this.reconectar.indexOf(this.chats[i]) === -1) {
-            this.reconectar.push(this.chats[i]);
-            this.messages.push({
-              room: room,
-              message: 'Usuario esta off',
-              from: 'Automatica',
-            });
-          }
-        }
-      }
-
       this.setLoadingPage(response[0]);
     });
 
     // chat foi aberto em outro lugar
     socket.on('invite', (data) => {
-      console.log('chat foi aberto');
       socket.emit('joinRoom', data);
     });
 

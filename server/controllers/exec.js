@@ -21,7 +21,7 @@ router.post('/token/user', validateUserToken,  async  (req, res) => {
 // Mensagens do chat
 router.post('/mensagens', validateUserToken,  async  (req, res) => {
   let room = req.body.room; 
-  let response = await mongoDB.query({ room: room });
+  let response = await mongoDB.query({ room: room, type: "mensagem" });
   return res.status(200).json(response);
 });
 

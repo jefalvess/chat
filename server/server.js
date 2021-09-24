@@ -57,6 +57,7 @@ module.exports = function (app) {
     socket.on('message', async function (data) {
 
       data["order"] = Date.now();
+      data["type"] = "mensagem"; 
       socket.broadcast.to(data.room).emit('message', data);
       
       // Salvar mensagem 
