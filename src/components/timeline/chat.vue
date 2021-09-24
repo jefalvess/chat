@@ -60,7 +60,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import axios from 'axios';
+
 // eslint-disable-next-line no-undef
 const socket = io({ transports: ['websocket'] });
 import ChatIco from '@carbon/icons-vue/es/chat/20';
@@ -106,22 +106,11 @@ export default {
       if (this.modalEdit !== '') {
         socket.emit('loggedin', { user_id: this.modalEdit });
       }
-    },
-    async mensagemAntiga () { 
-
-      let payload = { token: this.token, usuario :  this.modalEdit }
-      let response = await axios.post('/api/historico/mensagens', payload );
-
-      if (response.data.length > 0) {
-          console.log(response.data)
-      }
     }
-
   },
   mounted() {
     this.token = this.$cookies.get('token');
     this.criarUsuario();
-    this.mensagemAntiga()
   },
   created: function () {
     // criar chat

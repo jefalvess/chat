@@ -10,6 +10,7 @@ const uploadMiddleware = upload.uploadMiddleware;
 
 const router = express.Router();
 const fs = require('fs');
+const { response } = require('express');
 
 // Criar novo token de acesso
 router.post('/token/user', validateUserToken,  async  (req, res) => {
@@ -22,6 +23,17 @@ router.post('/mensagens', validateUserToken,  async  (req, res) => {
   let room = req.body.room; 
   let response = await mongoDB.query({ room: room });
   return res.status(200).json(response);
+});
+
+// Mensagens do chat
+router.post('/historico/mensagens', validateUserToken,  async  (req, res) => {
+
+
+  let response = await mongoDB.query({ usuario: req.user.usuario, type: 'chats' });
+
+  response.sort((a, b) => (a.order < b.order ? 1 : -1));
+
+  return res.status(200).json({ status: true, data: response });
 });
 
 
