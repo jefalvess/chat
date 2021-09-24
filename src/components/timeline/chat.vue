@@ -47,6 +47,7 @@
             <div
               v-if="listNotificationMensagem.indexOf(user.user_id) !== -1"
               class="bx--col--lg"
+              style="padding-top: 0.3rem; padding-left: 0.5rem;"
             >
               <ChatIco />
             </div>
@@ -59,6 +60,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import axios from 'axios';
 // eslint-disable-next-line no-undef
 const socket = io({ transports: ['websocket'] });
 import ChatIco from '@carbon/icons-vue/es/chat/20';
@@ -105,10 +107,21 @@ export default {
         socket.emit('loggedin', { user_id: this.modalEdit });
       }
     },
+    async mensagemAntiga () { 
+
+      let payload = { token: this.token, usuario :  this.modalEdit }
+      let response = await axios.post('/api/historico/mensagens', payload );
+
+      if (response.data.length > 0) {
+          console.log(response.data)
+      }
+    }
+
   },
   mounted() {
     this.token = this.$cookies.get('token');
     this.criarUsuario();
+    this.mensagemAntiga()
   },
   created: function () {
     // criar chat
@@ -167,12 +180,7 @@ export default {
 
     // Onde chega as mensagens de outro remetente
     socket.on('message', async (msg) => {
-      console.log('CHEGOU UMA MENSAGEM ');
-      console.log(msg);
-
       this.listNotificationMensagem.push(msg.from);
-
-      console.log(this.listNotificationMensagem);
     });
   },
 };

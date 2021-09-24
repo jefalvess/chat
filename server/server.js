@@ -24,7 +24,6 @@ module.exports = function(app) {
 
   /* socket function starts */
   io.on('connection', socket => {
-    console.log('conected');
 
     // Criar usuario e salvar na rede
     socket.on('loggedin', async function(user) {
@@ -45,24 +44,20 @@ module.exports = function(app) {
     socket.on('create', async function(data) {
       // create room { room: 'jeffjeferson', withUserId: 'jeferson' }
       socket.join(data.room);
-      console.log('Usuario cria a sala');
       let withSocket = await getSocketByUserId(data.withUserId);
-      console.log(data.withUserId);
-      console.log(withSocket.id);
       socket.broadcast.to(withSocket.id).emit('invite', { room: data });
     });
 
     // Quando o chat é aberto
     socket.on('joinRoom', async function(data) {
-      // join Rom { room: { room: 'jeffjeferson', withUserId: 'jeferson' } }
-      console.log('Usuario conforma criaçao da sala');
       socket.join(data.room.room);
     });
 
     // Chegou mensagem e mandar de volta
     socket.on('message', function(data) {
       // message { room: 'jeffjeferson', message: 'cha private ', from: 'jeff' }
-      console.log('Mensagem enviada com sucesso');
+
+      data["order"]  = Date.now() ; 
       mongoDB.insertDocument([data]);
       socket.broadcast.to(data.room).emit('message', data);
     });
