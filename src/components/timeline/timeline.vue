@@ -79,7 +79,7 @@
             {{ item.order | date }}
           </div>
 
-          <div style="padding: 0rem 1rem 0rem 1rem" class="bx--col">
+          <div v-if="item.usuario === modalEdit" style="padding: 0rem 1rem 0rem 1rem" class="bx--col">
             <TrashCan
               v-on:click="deletePost(index)"
               style="cursor: pointer; float: right"

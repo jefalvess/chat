@@ -1,39 +1,67 @@
 <template>
-  <div class="bx--grid" >
-
-     <cv-accordion ref="acc">
-       <cv-accordion-item>
-        <template slot="title">Usuarios conectados: {{ loadingPage.length - 1 }} </template>
+  <div class="bx--grid">
+    <cv-accordion ref="acc">
+      <cv-accordion-item>
+        <template slot="title"
+          >Usuarios conectados: {{ loadingPage.length - 1 }}
+        </template>
         <template slot="content">
-            
-          <div class="bx--row" v-if="loadingPage.length === 1"> 
-            <p style="padding-left: 1rem; cursor: pointer">Nenhum usuario conectado  </p>
-          </div> 
+          <div class="bx--row" v-if="loadingPage.length === 1">
+            <p style="padding-left: 1rem; cursor: pointer">
+              Nenhum usuario conectado
+            </p>
+          </div>
 
-              <!-- Lista de usuario conectados -->
-              <div  v-else class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId">
-                <p
-                  v-if="user.user_id !== modalEdit"
-                  v-bind:id="user.user_id"
-                  v-on:click="createRoom(user.user_id)"
-                  style="padding-left: 1rem; cursor: pointer"
-                >
-                  {{ user.user_id }}
-                </p>
-               
-            </div>    
-          </template>
+          <!-- Lista de usuario conectados -->
+          <div
+            v-else
+            class="bx--row"
+            v-for="user in loadingPage"
+            v-bind:key="user.socketId"
+            v-on:click="createRoom(user.user_id)"
+            style="cursor: pointer"
+          >
+            <div
+              v-if="user.user_id !== modalEdit"
+              v-bind:id="user.user_id"
+              style="padding-left: 1rem"
+              class="bx--col--lg"
+            >
+              <img
+                style="width: 2rem; height: 2rem; border-radius: 50%"
+                v-bind:src="'static/' + user.user_id + '.png'"
+              />
+            </div>
+
+            <div
+              v-if="user.user_id !== modalEdit"
+              v-bind:id="user.user_id"
+              style="padding-top: 0.3rem; padding-left: 0.5rem"
+              class="bx--col--lg"
+            >
+              <p>
+                {{ user.user_id }}
+              </p>
+            </div>
+
+            <div
+              v-if="listNotificationMensagem.indexOf(user.user_id) !== -1"
+              class="bx--col--lg"
+            >
+              <ChatIco />
+            </div>
+          </div>
+        </template>
       </cv-accordion-item>
-     </cv-accordion>
-    
+    </cv-accordion>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import axios from 'axios';
 // eslint-disable-next-line no-undef
 const socket = io({ transports: ['websocket'] });
+import ChatIco from '@carbon/icons-vue/es/chat/20';
 console.log('criar socket.io');
 
 export default {
@@ -46,6 +74,7 @@ export default {
       chats: [],
       reconectar: [],
       toke: '',
+      listNotificationMensagem: [],
     };
   },
   computed: {
@@ -53,36 +82,37 @@ export default {
     listRoomComputed: {
       get() {
         return this.listRoom;
-      }
-    }
+      },
+    },
+  },
+  components: {
+    ChatIco,
   },
   methods: {
     ...mapActions(['setLoadingPage', 'setChamarChat']),
     // Criar sala de bate papo
     async createRoom(id) {
-      this.setChamarChat(id)
+      this.setChamarChat(id);
       this.$router.push('/chat');
     },
     minimizeChat(room, index) {
       this.listRoom.splice(index, 1);
       this.chats.splice(index, 1);
-      this.messages = this.messages.filter(item => item.room !== room);
+      this.messages = this.messages.filter((item) => item.room !== room);
     },
     criarUsuario() {
       if (this.modalEdit !== '') {
         socket.emit('loggedin', { user_id: this.modalEdit });
-      } 
-      
-    }
+      }
+    },
   },
   mounted() {
-    this.token = this.$cookies.get("token")
+    this.token = this.$cookies.get('token');
     this.criarUsuario();
   },
-  created: function() {
-
+  created: function () {
     // criar chat
-    socket.on('updateUserList', response => {
+    socket.on('updateUserList', (response) => {
       console.log('atualiaçao de usuarios');
       // CHat que estava on e preciso reabrir conexao
       for (let i = 0; i < this.reconectar.length; i++) {
@@ -113,14 +143,14 @@ export default {
           } else {
             room = this.chats[i] + this.modalEdit;
           }
-    
+
           // Primeira noticaçao para o chat
-          if (this.reconectar.indexOf(this.chats[i]) === -1 ) { 
+          if (this.reconectar.indexOf(this.chats[i]) === -1) {
             this.reconectar.push(this.chats[i]);
             this.messages.push({
               room: room,
               message: 'Usuario esta off',
-              from: 'Automatica'
+              from: 'Automatica',
             });
           }
         }
@@ -130,61 +160,34 @@ export default {
     });
 
     // chat foi aberto em outro lugar
-    socket.on('invite', data => {
+    socket.on('invite', (data) => {
       console.log('chat foi aberto');
       socket.emit('joinRoom', data);
     });
 
     // Onde chega as mensagens de outro remetente
-    socket.on('message', async msg => {
+    socket.on('message', async (msg) => {
       console.log('CHEGOU UMA MENSAGEM ');
-      if (this.listRoom.indexOf(msg.room) === -1) {
-        this.listRoom.push(msg.room);
-        this.chats.push(msg.from);
-        let payload = { token: this.token, room :  msg.room }
-        let response = await axios.post('/api/mensagens', payload );
-        if (response.data.length > 0) {
-          this.messages = this.messages.concat(response.data);
-        }
+      console.log(msg);
 
-        this.messages[this.messages.length - 1] = delete this.messages[
-          this.messages.length - 1
-        ]['_id'];
+      this.listNotificationMensagem.push(msg.from);
 
-        if (
-          this.messages[this.messages.length - 1] !==
-          { room: msg.room, message: msg.message, from: msg.from }
-        ) {
-          this.messages.push({
-            room: msg.room,
-            message: msg.message,
-            from: msg.from
-          });
-        }
-      } else {
-        this.mensagemParticular.push('');
-
-        this.messages.push({
-          room: msg.room,
-          message: msg.message,
-          from: msg.from
-        });
-      }
+      console.log(this.listNotificationMensagem);
     });
-  }
+  },
 };
 </script>
 
 <style>
-#pop{ 
-  position:absolute;
-  top:50%;
-  left:50%;
-  margin-left:-150px;
-  margin-top:-100px;
-  padding:10px;
-  width:300px;
-  height:200px;
-  border:1px solid #d0d0d0;
+#pop {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -150px;
+  margin-top: -100px;
+  padding: 10px;
+  width: 300px;
+  height: 200px;
+  border: 1px solid #d0d0d0;
 }
 </style>
