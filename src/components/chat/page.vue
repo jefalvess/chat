@@ -66,6 +66,14 @@
         </cv-accordion>
       </div>
       <div class="bx--col">
+         
+         Tetxo do lado esquerdo 
+          <div class="bx--row">
+            <div class="bx--offset-lg-15 bx--col-lg-1 bx--offset-md-7 bx--col-md-1 bx--offset-sm-3 bx--col-sm-1" >
+              1
+            </div>
+          </div>
+
         <div class="bx--row">
           <div style="border: 1px solid" class="bx--col">
             <!-- id / botao de eliminar  -->
