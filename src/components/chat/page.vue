@@ -2,66 +2,64 @@
   <div class="bx--grid">
     <div class="bx--row">
       <div class="bx--col-lg-2">
-        <div style="padding-top: 2rem;padding-bottom: 2rem;" class="bx--row">
-          <p style="padding-left: 1rem; cursor: pointer">Bate-papos</p>
-        </div>
+        <cv-accordion ref="acc">
+            <cv-accordion-item>
+              <template slot="title">Conversas: </template>
+                <template slot="content">
+                  <!-- Lista de usuario conectados -->
+                  <div class="bx--row" v-for="user in historicoComputed" v-bind:key="user.chatCom" style="height: 3.6rem;"  >
+                    <div
+                      style="padding-left: 1rem"
+                      class="bx--col--lg"
+                    >
+                      <img
+                        style="width: 2rem; height: 2rem; border-radius: 50%"
+                        v-bind:src="'static/' + user.chatcom + '.png'"
+                      />
+                    </div>
 
-        <!-- Lista de usuario conectados -->
-        <div
-          class="bx--row"
-          v-for="user in historicoComputed"
-          v-bind:key="user.chatCom"
-          style="height: 3.6rem;" 
-        >
-          <div
-            style="padding-left: 1rem"
-            class="bx--col--lg"
-          >
-            <img
-              style="width: 2rem; height: 2rem; border-radius: 50%"
-              v-bind:src="'static/' + user.chatcom + '.png'"
-            />
-          </div>
+                    <div
+                      style="padding-top: 0.3rem; padding-left: 0.5rem"
+                      class="bx--col--lg"
+                    >
+                      <div class="bx--row">
+                        <p
+                          v-if="user.chatcom !== modalEdit"
+                          v-bind:id="user.chatcom"
+                          v-on:click="createRoom(user.chatcom)"
+                          style="padding-left: 1rem; cursor: pointer; "
+                        >
+                          {{ user.chatcom }}
+                        </p>
+                      </div>
 
-          <div
-            style="padding-top: 0.3rem; padding-left: 0.5rem"
-            class="bx--col--lg"
-          >
-            <div class="bx--row">
-              <p
-                v-if="user.chatcom !== modalEdit"
-                v-bind:id="user.chatcom"
-                v-on:click="createRoom(user.chatcom)"
-                style="padding-left: 1rem; cursor: pointer; "
-              >
-                {{ user.chatcom }}
-              </p>
-            </div>
+                      <div class="bx--row">
+                      
 
-            <div class="bx--row">
-            
+                        <p
+                          v-if="user.chatcom !== modalEdit"
+                          v-bind:id="user.chatcom"
+                          v-on:click="createRoom(user.chatcom)"
+                          style="padding-left: 1rem; cursor: pointer; font-size: 10px;"
+                        >
+                            {{ user.ultimaMensagem }}
+                        </p>
 
-               <p
-                v-if="user.chatcom !== modalEdit"
-                v-bind:id="user.chatcom"
-                v-on:click="createRoom(user.chatcom)"
-                style="padding-left: 1rem; cursor: pointer; font-size: 10px;"
-              >
-                   {{ user.ultimaMensagem }}
-              </p>
+                      </div>
+                    </div>
+                  
+                    <div
+                        v-if="listNotificationMensagem.indexOf(user.chatcom) !== -1"
+                        class="bx--col--lg"
+                        style="padding-top: 0.3rem; padding-left: 0.5rem;"
+                      >
+                        <ChatIco />
+                      </div>
 
-            </div>
-          </div>
-        
-           <div
-              v-if="listNotificationMensagem.indexOf(user.chatcom) !== -1"
-              class="bx--col--lg"
-              style="padding-top: 0.3rem; padding-left: 0.5rem;"
-            >
-              <ChatIco />
-            </div>
-
-        </div>
+                  </div>
+              </template > 
+            </cv-accordion-item>
+        </cv-accordion>
       </div>
       <div class="bx--col">
         <div class="bx--row">
@@ -81,7 +79,7 @@
               style="
                 overflow: auto;
                 flex-direction: column-reverse;
-                height: 43.5rem;
+                height: 76vh;
               "
             >
               <div class="bx--col">
@@ -159,9 +157,7 @@ export default {
       messages: [],
       mensagemParticular: [],
       listRoom: [],
-      chats: [],
-      reconectar: [],
-      toke: '',
+      reconectar: '',
       historico: [],
       chatAberto: '',
       listNotificationMensagem: [] 
@@ -171,7 +167,7 @@ export default {
     ChatIco
   },
   computed: {
-    ...mapGetters(['loadingPage', 'modalEdit', 'chamarChat']),
+    ...mapGetters(['modalEdit', 'chamarChat']),
     listRoomComputed: {
       get() {
         return this.listRoom;
@@ -187,10 +183,9 @@ export default {
     ...mapActions(['setLoadingPage']),
     // Criar sala de bate papo
     async createRoom(id) {
-      if (this.chatAberto !== id) {
-        console.log('Abri chat ');
-
+      if (this.chatAberto !== id ||  this.reconectar === this.chatAberto) {
         this.chatAberto = id;
+        this.reconectar = false;
 
         let loggedInUser = this.modalEdit;
         let room = '';
@@ -264,51 +259,31 @@ export default {
   created: function () {
     // criar chat
     socket.on('updateUserList', (response) => {
-      console.log('atualiaçao de usuarios online', response);
 
-      // // CHat que estava on e preciso reabrir conexao
-      // for (let i = 0; i < this.reconectar.length; i++) {
-      //   // Se o chat aberto nao existir aqui
-      //   if (response[1].indexOf(this.reconectar[i]) === 1) {
-      //     console.log('preciso reconectar esse chat');
 
-      //     let room = '';
-      //     if (this.modalEdit > this.chats[i]) {
-      //       room = this.modalEdit + this.chats[i];
-      //     } else {
-      //       room = this.chats[i] + this.modalEdit;
-      //     }
+        // Tenho um chat aberto e vou me conectar a ele novamente
+        if (this.reconectar !== false && response[1].indexOf(this.reconectar) !== -1 ) {
+          console.log('Reconectando : ', this.reconectar);
+          this.createRoom(this.listRoomComputed.withUserId);
+        }
+        console.log(response)
+        // Usuario que estou falando não esta mais online
+        if (response[1].indexOf(this.listRoomComputed.withUserId) === -1) {
 
-      //     let index = this.chats.indexOf(this.reconectar[i]);
-      //     this.minimizeChat(room, index);
-      //     this.createRoom(this.reconectar[i]);
-      //   }
-      // }
+            // Guardar nome na lista para reconectar 
+            if (this.reconectar !== this.listRoomComputed.withUserId) {
+                this.reconectar = this.listRoomComputed.withUserId;
+                this.messages.push({
+                  room: this.listRoomComputed.room,
+                  message: 'Usuario esta Off-line',
+                  from: 'off'
+                });
+            }
 
-      // // Avisar se alguem ficar of e eu tenho chat aberto;
-      // for (let i = 0; i < this.chats.length; i++) {
-      //   // Se o chat aberto nao existir aqui
-      //   if (response[1].indexOf(this.chats[i]) === -1) {
-      //     let room = '';
-      //     if (this.modalEdit > this.chats[i]) {
-      //       room = this.modalEdit + this.chats[i];
-      //     } else {
-      //       room = this.chats[i] + this.modalEdit;
-      //     }
+        }
 
-      //     // Primeira noticaçao para o chat
-      //     if (this.reconectar.indexOf(this.chats[i]) === -1 ) {
-      //       this.reconectar.push(this.chats[i]);
-      //       this.messages.push({
-      //         room: room,
-      //         message: 'Usuario esta off',
-      //         from: 'Automatica'
-      //       });
-      //     }
-      //   }
-      // }
+      this.setLoadingPage('');
 
-      this.setLoadingPage(response[0]);
     });
 
     // chat foi aberto em outro lugar
@@ -318,7 +293,7 @@ export default {
 
     // Onde chega as mensagens de outro remetente
     socket.on('message', async (msg) => {
-      if (this.listRoom === msg.room) {
+      if (this.listRoomComputed.room === msg.room) {
         this.messages.push({
           room: msg.room,
           message: msg.message,

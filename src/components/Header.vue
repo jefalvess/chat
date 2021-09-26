@@ -1,7 +1,7 @@
 <template>
   <div style="margin-bottom: 3.1rem" class="bx--row">
     <cv-header aria-label="Carbon header">
-     <cv-header-menu-button aria-label="Header menu" aria-controls="side-nav" />
+
   
         <cv-header-name style="cursor: pointer" @click="redirect()" prefix="Projeto">
           [Rede Social]
