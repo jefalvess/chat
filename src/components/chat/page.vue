@@ -3,67 +3,71 @@
     <div class="bx--row">
       <div class="bx--col-lg-2">
         <cv-accordion ref="acc">
-            <cv-accordion-item>
-              <template slot="title">Conversas: </template>
-                <template slot="content">
-                  <!-- Lista de usuario conectados -->
-                  <div class="bx--row" v-for="user in historicoComputed" v-bind:key="user.chatCom" style="height: 3.6rem;"  >
-                    <div
-                      style="padding-left: 1rem"
-                      class="bx--col--lg"
+          <cv-accordion-item>
+            <template slot="title">Conversas: </template>
+            <template slot="content">
+              <!-- Lista de usuario conectados -->
+              <div
+                class="bx--row"
+                v-for="user in historicoComputed"
+                v-bind:key="user.chatCom"
+                style="height: 3.6rem"
+              >
+                <div class="bx--col--lg">
+                  <img
+                     v-on:click="createRoom(user.chatcom)"
+     
+                    style="width: 2rem; height: 2rem; border-radius: 50%; cursor: pointer"
+                    v-bind:src="'static/' + user.chatcom + '.png'"
+                  />
+                </div>
+
+                <div
+                  style="padding-top: 0.3rem; padding-left: 0.5rem"
+                  class="bx--col--lg"
+                >
+                  <div class="bx--row">
+                    <p
+                      v-if="user.chatcom !== modalEdit"
+                      v-bind:id="user.chatcom"
+                      v-on:click="createRoom(user.chatcom)"
+                      style="padding-left: 1rem; cursor: pointer"
                     >
-                      <img
-                        style="width: 2rem; height: 2rem; border-radius: 50%"
-                        v-bind:src="'static/' + user.chatcom + '.png'"
-                      />
-                    </div>
-
-                    <div
-                      style="padding-top: 0.3rem; padding-left: 0.5rem"
-                      class="bx--col--lg"
-                    >
-                      <div class="bx--row">
-                        <p
-                          v-if="user.chatcom !== modalEdit"
-                          v-bind:id="user.chatcom"
-                          v-on:click="createRoom(user.chatcom)"
-                          style="padding-left: 1rem; cursor: pointer; "
-                        >
-                          {{ user.chatcom }}
-                        </p>
-                      </div>
-
-                      <div class="bx--row">
-                      
-
-                        <p
-                          v-if="user.chatcom !== modalEdit"
-                          v-bind:id="user.chatcom"
-                          v-on:click="createRoom(user.chatcom)"
-                          style="padding-left: 1rem; cursor: pointer; font-size: 10px;"
-                        >
-                            {{ user.ultimaMensagem }}
-                        </p>
-
-                      </div>
-                    </div>
-                  
-                    <div
-                        v-if="listNotificationMensagem.indexOf(user.chatcom) !== -1"
-                        class="bx--col--lg"
-                        style="padding-top: 0.3rem; padding-left: 0.5rem;"
-                      >
-                        <ChatIco />
-                      </div>
-
+                      {{ user.chatcom }}
+                    </p>
                   </div>
-              </template > 
-            </cv-accordion-item>
+
+                  <div class="bx--row">
+                    <p
+                      v-if="user.chatcom !== modalEdit"
+                      v-bind:id="user.chatcom"
+                      v-on:click="createRoom(user.chatcom)"
+                      style="
+                        padding-left: 1rem;
+                        cursor: pointer;
+                        font-size: 10px;
+                      "
+                    >
+                      {{ user.ultimaMensagem.substr(0, 17) }} ...
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  v-if="listNotificationMensagem.indexOf(user.chatcom) !== -1"
+                  class="bx--col--lg"
+                  style="padding-top: 0.3rem; padding-left: 0.5rem"
+                >
+                  <ChatIco />
+                </div>
+              </div>
+            </template>
+          </cv-accordion-item>
         </cv-accordion>
       </div>
       <div class="bx--col">
         <div class="bx--row">
-          <div  style="border: 1px solid;" class="bx--col">
+          <div style="border: 1px solid" class="bx--col">
             <!-- id / botao de eliminar  -->
             <div class="bx--row">
               <div
@@ -87,16 +91,36 @@
                   class="bx--row"
                   v-for="(message, index) in messages"
                   v-bind:key="index"
+
                 >
-                  <div class="bx--col--lg">
+                <div> 
+
+            
+
+                </div> 
+                  <div style="padding-left: 0.5rem" class="bx--col--lg">
                     <img
-                      style="width: 2rem; height: 2rem; border-radius: 50%"
+                      style="
+                        width: 2rem;
+                        height: 2rem;
+                        border-radius: 50%;
+                        margin-top: 1rem;
+                      "
                       v-bind:src="'static/' + message.from + '.png'"
                     />
                   </div>
 
                   <div
-                    style="margin-left: 0.5rem; margin-top: 0.5rem"
+                    style="
+                      min-height: 1rem;
+                      background-color: white;
+                      margin-left: 0.5rem;
+                      margin-top: 0.5rem;
+                      padding-top: 0.5rem;
+                      padding-bottom: 0.5rem;
+                      border-radius: 25px;
+                      padding: 1rem;
+                    "
                     class="bx--col--lg"
                   >
                     <span class="message"> {{ message.message }} </span>
@@ -105,12 +129,16 @@
               </div>
             </div>
             <!-- Botao de enviar mensagem -->
-            <div class="bx--row">
-              <div style="width: 100%" class="chat-window" v-bind:id="listRoomComputed.room">
+            <div style="padding-top: 1rem" class="bx--row">
+              <div
+                style="width: 100%"
+                class="chat-window"
+                v-bind:id="listRoomComputed.room"
+              >
                 <div class="body"></div>
                 <div class="footer">
                   <input
-                    style="width: 90%; height: 2rem;"
+                    style="width: 90%; height: 2rem"
                     type="text"
                     v-model="mensagemParticular"
                     class="messageText"
@@ -160,11 +188,11 @@ export default {
       reconectar: '',
       historico: [],
       chatAberto: '',
-      listNotificationMensagem: [] 
+      listNotificationMensagem: [],
     };
   },
-  components : {
-    ChatIco
+  components: {
+    ChatIco,
   },
   computed: {
     ...mapGetters(['modalEdit', 'chamarChat']),
@@ -183,7 +211,7 @@ export default {
     ...mapActions(['setLoadingPage']),
     // Criar sala de bate papo
     async createRoom(id) {
-      if (this.chatAberto !== id ||  this.reconectar === this.chatAberto) {
+      if (this.chatAberto !== id || this.reconectar === this.chatAberto) {
         this.chatAberto = id;
         this.reconectar = false;
 
@@ -259,31 +287,28 @@ export default {
   created: function () {
     // criar chat
     socket.on('updateUserList', (response) => {
+      // Tenho um chat aberto e vou me conectar a ele novamente
+      if (
+        this.reconectar !== false &&
+        response[1].indexOf(this.reconectar) !== -1
+      ) {
 
-
-        // Tenho um chat aberto e vou me conectar a ele novamente
-        if (this.reconectar !== false && response[1].indexOf(this.reconectar) !== -1 ) {
-          console.log('Reconectando : ', this.reconectar);
-          this.createRoom(this.listRoomComputed.withUserId);
+        this.createRoom(this.listRoomComputed.withUserId);
+      }
+      // Usuario que estou falando não esta mais online
+      if (response[1].indexOf(this.listRoomComputed.withUserId) === -1) {
+        // Guardar nome na lista para reconectar
+        if (this.reconectar !== this.listRoomComputed.withUserId) {
+          this.reconectar = this.listRoomComputed.withUserId;
+          this.messages.push({
+            room: this.listRoomComputed.room,
+            message: 'Usuario esta Off-line',
+            from: 'off',
+          });
         }
-        console.log(response)
-        // Usuario que estou falando não esta mais online
-        if (response[1].indexOf(this.listRoomComputed.withUserId) === -1) {
-
-            // Guardar nome na lista para reconectar 
-            if (this.reconectar !== this.listRoomComputed.withUserId) {
-                this.reconectar = this.listRoomComputed.withUserId;
-                this.messages.push({
-                  room: this.listRoomComputed.room,
-                  message: 'Usuario esta Off-line',
-                  from: 'off'
-                });
-            }
-
-        }
+      }
 
       this.setLoadingPage('');
-
     });
 
     // chat foi aberto em outro lugar
@@ -299,7 +324,7 @@ export default {
           message: msg.message,
           from: msg.from,
         });
-      } else { 
+      } else {
         this.listNotificationMensagem.push(msg.from);
       }
     });
