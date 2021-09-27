@@ -8,14 +8,14 @@
           </div>
 
     <cv-accordion ref="acc">
-      <cv-accordion-item>
+      <cv-accordion-item :open="true">
         <template slot="title"
           >Usuarios conectados:
         </template>
-        <template slot="content" :open="true">
+        <template slot="content">
 
           <!-- Lista de usuario conectados -->
-          <div class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId" v-on:click="createRoom(user.user_id)" >
+          <div style="cursor: pointer; " class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId" v-on:click="createRoom(user.user_id)" >
            
             <div v-if="user.user_id !== modalEdit" v-bind:id="user.user_id" style="padding-left: 1rem" class="bx--col--lg" >
               <img style="width: 2rem; height: 2rem; border-radius: 50%" v-bind:src="'static/' + user.user_id + '.png'" />
