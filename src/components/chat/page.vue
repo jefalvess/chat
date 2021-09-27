@@ -218,6 +218,8 @@ export default {
           user: this.modalEdit,
         });
       }
+
+
     },
     sendMessage(room, chatcom) {
       console.log('Enviar mensagem ');
@@ -243,29 +245,42 @@ export default {
         message: message,
         from: loggedInUser,
       });
+
+
     },
     criarUsuario() {
+
         socket.emit('loggedin', { user_id: this.modalEdit });
+
         if (this.chamarChat !== '') { 
-          this.createRoom(this.chamarChat);
+
+            this.createRoom(this.chamarChat);
+
         }
+
     },
     async mensagemAntiga() {
+
       let payload = { token: this.token, usuario: this.modalEdit };
       let response = await axios.post('/api/historico/mensagens', payload);
 
       if (response.data.status === true) {
+        this.createRoom(response.data.data[0].chatcom);
         this.historico = response.data.data;
       }
+
     },
     async checarToken(){
-
+      
+      // Validar se existe token valido
       if (this.token !== null) { 
-        let response = await axios.post('/api/token/user', {token : this.token} );
-        if (response.data.status === true) {     
-          this.setModalEdit(response.data.usuario);
-          this.criarUsuario()
-        }
+
+            let response = await axios.post('/api/token/user', {token : this.token} );
+            if (response.data.status === true) {     
+              this.setModalEdit(response.data.usuario);
+              this.criarUsuario()
+            }
+
       } else { 
 
         this.$router.push('/login');
@@ -276,7 +291,8 @@ export default {
   mounted() {
     this.token = this.$cookies.get('token');
     this.checarToken()
-    this.mensagemAntiga();
+    this.mensagemAntiga()
+    
   },
   created: function () {
     // criar chat

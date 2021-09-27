@@ -1,11 +1,9 @@
 <template>
   <div class="bx--grid">
 
-       <div v-on:click="pastaDePerfil()" style="border-top: 1px solid #e0e0e0; padding-top: 0.5rem; padding-left: 1rem; cursor: pointer; padding-bottom: 0.5rem;" class="bx--row">
-            <p>
-              Mensagens
-            </p>
-          </div>
+    <div v-on:click="pastaDePerfil()"  style="padding-left: 2.5rem; border-top: 1px solid #e0e0e0; padding-top: 0.5rem;  cursor: pointer; padding-bottom: 0.5rem;" class="bx--row">
+      <p> Mensagens </p>
+    </div>
 
     <cv-accordion ref="acc">
       <cv-accordion-item :open="true">
