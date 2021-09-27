@@ -1,54 +1,33 @@
 <template>
   <div class="bx--grid">
+
+       <div v-on:click="pastaDePerfil()" style="border-top: 1px solid #e0e0e0; padding-top: 0.5rem; padding-left: 1rem; cursor: pointer; padding-bottom: 0.5rem;" class="bx--row">
+            <p>
+              Mensagens
+            </p>
+          </div>
+
     <cv-accordion ref="acc">
       <cv-accordion-item>
         <template slot="title"
           >Usuarios conectados: {{ loadingPage.length - 1 }}
         </template>
-        <template slot="content">
-          <div class="bx--row" v-if="loadingPage.length === 1">
-            <p style="padding-left: 1rem; cursor: pointer">
-              Nenhum usuario conectado
-            </p>
-          </div>
+        <template slot="content" :open="true">
 
           <!-- Lista de usuario conectados -->
-          <div
-            v-else
-            class="bx--row"
-            v-for="user in loadingPage"
-            v-bind:key="user.socketId"
-            v-on:click="createRoom(user.user_id)"
-            style="cursor: pointer"
-          >
-            <div
-              v-if="user.user_id !== modalEdit"
-              v-bind:id="user.user_id"
-              style="padding-left: 1rem"
-              class="bx--col--lg"
-            >
-              <img
-                style="width: 2rem; height: 2rem; border-radius: 50%"
-                v-bind:src="'static/' + user.user_id + '.png'"
-              />
+          <div class="bx--row" v-for="user in loadingPage" v-bind:key="user.socketId" v-on:click="createRoom(user.user_id)" >
+           
+            <div v-if="user.user_id !== modalEdit" v-bind:id="user.user_id" style="padding-left: 1rem" class="bx--col--lg" >
+              <img style="width: 2rem; height: 2rem; border-radius: 50%" v-bind:src="'static/' + user.user_id + '.png'" />
             </div>
 
-            <div
-              v-if="user.user_id !== modalEdit"
-              v-bind:id="user.user_id"
-              style="padding-top: 0.3rem; padding-left: 0.5rem"
-              class="bx--col--lg"
-            >
+            <div v-if="user.user_id !== modalEdit" v-bind:id="user.user_id" style="padding-top: 0.3rem; padding-left: 0.5rem" class="bx--col--lg" >
               <p>
                 {{ user.user_id }}
               </p>
             </div>
 
-            <div
-              v-if="listNotificationMensagem.indexOf(user.user_id) !== -1"
-              class="bx--col--lg"
-              style="padding-top: 0.3rem; padding-left: 0.5rem;"
-            >
+            <div v-if="listNotificationMensagem.indexOf(user.user_id) !== -1" class="bx--col--lg" style="padding-top: 0.3rem; padding-left: 0.5rem;" >
               <ChatIco />
             </div>
           </div>
@@ -106,6 +85,11 @@ export default {
       if (this.modalEdit !== '') {
         socket.emit('loggedin', { user_id: this.modalEdit });
       }
+    },
+    pastaDePerfil() { 
+
+      this.$router.push('/chat');
+
     }
   },
   mounted() {

@@ -3,7 +3,7 @@
     <div class="bx--row">
       <div class="bx--col-lg-2">
         <cv-accordion ref="acc">
-          <cv-accordion-item>
+          <cv-accordion-item :open="true">
             <template slot="title">Conversas: </template>
             <template slot="content">
               <!-- Lista de usuario conectados -->
@@ -66,15 +66,7 @@
         </cv-accordion>
       </div>
       <div class="bx--col">
-         
-         Tetxo do lado esquerdo 
-          <div class="bx--row">
-            <div class="bx--offset-lg-15 bx--col-lg-1 bx--offset-md-7 bx--col-md-1 bx--offset-sm-3 bx--col-sm-1" >
-              1
-            </div>
-          </div>
-
-        <div class="bx--row">
+        <div v-if="chatAberto !== ' ' " class="bx--row">
           <div style="border: 1px solid" class="bx--col">
             <!-- id / botao de eliminar  -->
             <div class="bx--row">
@@ -82,7 +74,7 @@
                 style="width: 80%; padding-top: 0.5rem; padding-bottom: 0.5rem"
                 lass="bx--col--lg"
               >
-                ID CHAT : {{ listRoomComputed.room }}
+                ID CHAT : {{ listRoomComputed.room }} {{ chatAberto }}
               </div>
             </div>
             <!-- Mensagens -->
@@ -95,44 +87,18 @@
               "
             >
               <div class="bx--col">
-                <div
-                  class="bx--row"
-                  v-for="(message, index) in messages"
-                  v-bind:key="index"
+                <div class="bx--row" v-for="(message, index) in messages" v-bind:key="index" >
 
-                >
-                <div> 
-
-            
-
-                </div> 
-                  <div style="padding-left: 0.5rem" class="bx--col--lg">
-                    <img
-                      style="
-                        width: 2rem;
-                        height: 2rem;
-                        border-radius: 50%;
-                        margin-top: 1rem;
-                      "
-                      v-bind:src="'static/' + message.from + '.png'"
-                    />
+              
+                  <div v-if="message.from !== modalEdit"  style="padding-left: 0.5rem" class="bx--col--lg">
+                    <img style=" width: 2rem; height: 2rem; border-radius: 50%; margin-top: 1rem; " v-bind:src="'static/' + message.from + '.png'" />
                   </div>
-
-                  <div
-                    style="
-                      min-height: 1rem;
-                      background-color: white;
-                      margin-left: 0.5rem;
-                      margin-top: 0.5rem;
-                      padding-top: 0.5rem;
-                      padding-bottom: 0.5rem;
-                      border-radius: 25px;
-                      padding: 1rem;
-                    "
-                    class="bx--col--lg"
-                  >
+                   
+                  <div v-if="message.from !== modalEdit" style="background-color: white; min-height: 1rem; margin-left: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 25px; padding: 1rem; " class="bx--col--lg" >
                     <span class="message"> {{ message.message }} </span>
                   </div>
+
+                  <messageLeft v-if="message.from === modalEdit" v-bind:message="message" />
                 </div>
               </div>
             </div>
@@ -146,7 +112,7 @@
                 <div class="body"></div>
                 <div class="footer">
                   <input
-                    style="width: 90%; height: 2rem"
+                    style="width: 90%; height: 2.5rem"
                     type="text"
                     v-model="mensagemParticular"
                     class="messageText"
@@ -158,7 +124,7 @@
                     "
                   />
                   <button
-                    style="height: 2rem"
+                    style="height: 2.5rem; width: 10%;"
                     @click="
                       sendMessage(
                         listRoomComputed.room,
@@ -182,6 +148,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
 import ChatIco from '@carbon/icons-vue/es/chat/20';
+const messageLeft = () => import('./messageLeft.vue');
 // eslint-disable-next-line no-undef
 const socket = io({ transports: ['websocket'] });
 console.log('criar socket.io');
@@ -197,10 +164,12 @@ export default {
       historico: [],
       chatAberto: '',
       listNotificationMensagem: [],
+      token: ''
     };
   },
   components: {
     ChatIco,
+    messageLeft
   },
   computed: {
     ...mapGetters(['modalEdit', 'chamarChat']),
@@ -216,7 +185,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['setLoadingPage']),
+    ...mapActions(['setLoadingPage', 'setModalEdit']),
     // Criar sala de bate papo
     async createRoom(id) {
       if (this.chatAberto !== id || this.reconectar === this.chatAberto) {
@@ -252,9 +221,14 @@ export default {
     },
     sendMessage(room, chatcom) {
       console.log('Enviar mensagem ');
+      if (this.mensagemParticular === '') {
+        return '';
+      }
+      
 
       let loggedInUser = this.modalEdit;
       let message = this.mensagemParticular;
+    
       this.mensagemParticular = '';
 
       socket.emit('message', {
@@ -271,11 +245,10 @@ export default {
       });
     },
     criarUsuario() {
-      if (this.modalEdit !== '') {
         socket.emit('loggedin', { user_id: this.modalEdit });
-      } else {
-        this.$router.push('/login');
-      }
+        if (this.chamarChat !== '') { 
+          this.createRoom(this.chamarChat);
+        }
     },
     async mensagemAntiga() {
       let payload = { token: this.token, usuario: this.modalEdit };
@@ -285,11 +258,24 @@ export default {
         this.historico = response.data.data;
       }
     },
+    async checarToken(){
+
+      if (this.token !== null) { 
+        let response = await axios.post('/api/token/user', {token : this.token} );
+        if (response.data.status === true) {     
+          this.setModalEdit(response.data.usuario);
+          this.criarUsuario()
+        }
+      } else { 
+
+        this.$router.push('/login');
+
+      }
+    }
   },
   mounted() {
     this.token = this.$cookies.get('token');
-    this.criarUsuario();
-    this.createRoom(this.chamarChat);
+    this.checarToken()
     this.mensagemAntiga();
   },
   created: function () {
