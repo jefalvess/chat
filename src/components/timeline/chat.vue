@@ -10,7 +10,7 @@
     <cv-accordion ref="acc">
       <cv-accordion-item>
         <template slot="title"
-          >Usuarios conectados: {{ loadingPage.length - 1 }}
+          >Usuarios conectados:
         </template>
         <template slot="content" :open="true">
 
