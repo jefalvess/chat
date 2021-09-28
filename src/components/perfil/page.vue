@@ -129,77 +129,37 @@
       <cv-text-input readonly v-model="perfilData.education"> </cv-text-input>
     </div>
 
-    <div
-      style="
-        padding-top: 2.6rem;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      "
-      class="bx--row"
-    >
+    <div style=" padding-top: 2.6rem; height: 3rem; display: flex; align-items: center; justify-content: center; " class="bx--row" >
       Estado Civil
     </div>
 
-    <div
-      style="display: flex; align-items: center; justify-content: center"
-      class="bx--row"
-    >
+    <div style="display: flex; align-items: center; justify-content: center" class="bx--row" >
       <cv-text-input readonly v-model="perfilData.estadoCivil"> </cv-text-input>
     </div>
 
-    <div
-      style="
-        padding-top: 2.6rem;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      "
-      class="bx--row"
-    >
+    <div style=" padding-top: 2.6rem; height: 3rem; display: flex; align-items: center; justify-content: center; " class="bx--row" >
       Email
     </div>
 
-    <div
-      style="display: flex; align-items: center; justify-content: center"
-      class="bx--row"
-    >
+    <div style="display: flex; align-items: center; justify-content: center" class="bx--row" >
       <cv-text-input readonly v-model="perfilData.email"> </cv-text-input>
     </div>
 
-    <div
-      style="
-        padding-top: 2rem;
-        height: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      "
-      class="bx--row"
-    >
+    <div style=" padding-top: 2rem; height: 2rem; display: flex; align-items: center; justify-content: center; " class="bx--row" >
       <cv-button @click="editPerfil()"> Editar Perfil </cv-button>
     </div>
 
-    <div
-      style="
-        padding-top: 4rem;
-        height: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      "
-      class="bx--row"
-    >
+    <div style="padding-top: 4rem; height: 2rem; display: flex; align-items: center; justify-content: center; padding-bottom: 3rem;" class="bx--row" >
       <cv-button kind="secondary" @click="timeline()"> timeline </cv-button>
     </div>
+    <timeline />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import axios from 'axios';
+const timeline = () => import('./timeline.vue');
 
 export default {
   name: 'usuario',
@@ -213,6 +173,9 @@ export default {
   },
   computed: {
     ...mapGetters(['modalEdit']),
+  },
+  components: {
+    timeline
   },
   methods: {
     // ir para pagina de perfil

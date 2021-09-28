@@ -54,16 +54,12 @@
           padding: 1rem 1rem 1rem 1rem;
         "
       >
-        <div class="bx--row">
-          <div v-if="item.usuario !== 'undefined' " 
-          style="padding: 0rem 0rem 0rem 1rem" class="bx--col--lg">         
+        <div @click="verPerfil(item.usuario)" style="cursor: pointer;" class="bx--row">
+          <div v-if="item.usuario !== 'undefined' " style="padding: 0rem 0rem 0rem 1rem" class="bx--col--lg">         
                <img   style="width: 2rem; height: 2rem; border-radius: 50%" v-bind:src="'static/'+ item.usuario + '.png'" />
           </div>
 
-          <div
-            style="padding-top: 0.4rem; padding-left: 0.4rem"
-            class="bx--col--lg"
-          >
+          <div style="padding-top: 0.4rem; padding-left: 0.4rem" class="bx--col--lg" >
             <p style="font-size: 14px">@{{ item.usuario }}</p>
           </div>
         </div>
@@ -156,6 +152,18 @@ export default {
       axios.post('/api/delete/post', payload);
       this.timelineData.splice(index, 1);
     },
+    async verPerfil(user) {
+
+        if ( this.modalEdit !== user ) {  
+
+        this.$router.push('/perfil/' + user);
+        
+        } else { 
+
+          this.$router.push('/perfil');
+        }
+    }
+    
   },
   mounted() {
     this.token = this.$cookies.get('token');

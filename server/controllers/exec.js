@@ -148,9 +148,32 @@ router.post('/buscar/timeline', validateUserToken,  async  (req, res) => {
 
 });
 
+
+// Buscar posto daquele usuario 
+router.post('/buscar/timeline/visita', validateUserToken,  async  (req, res) => {
+  
+  let buscarTimeline = await mongoDB.query({ usuario: req.body.usuarioVisita,  type : "post" });
+
+  buscarTimeline.sort((a, b) => (a.order < b.order ? 1 : -1));
+
+  return res.status(200).json( { status: true, timelineData: buscarTimeline } );
+
+});
+
+
+// Buscar posto daquele usuario 
+router.post('/buscar/timeline/usuario', validateUserToken,  async  (req, res) => {
+  
+  let buscarTimeline = await mongoDB.query({ usuario: req.user.usuario,  type : "post" });
+
+  buscarTimeline.sort((a, b) => (a.order < b.order ? 1 : -1));
+
+  return res.status(200).json( { status: true, timelineData: buscarTimeline } );
+
+});
+
 // Deletar um post
 router.post('/delete/post',  validateUserToken,  async  (req, res) => {
-  console.log(req.body.id)
   mongoDB.deleteDocument( { _id : ObjectID(req.body.id) }  );
   return res.status(200).json( { status: true, mensagem: 'deletado com sucesso ' } );
 
@@ -162,6 +185,12 @@ router.post('/delete/post',  validateUserToken,  async  (req, res) => {
 // Puxar infomaçoes do perfil
 router.post('/perfil',  validateUserToken,  async (req, res) => {
   let perfil = await mongoDB.query({ usuario: req.user.usuario, type : "perfil" });
+  return res.status(200).json( { status: true, perfil: perfil[0] } );
+});
+
+// Puxar infomaçoes do perfil Visitante
+router.post('/perfil/visita',  validateUserToken,  async (req, res) => {
+  let perfil = await mongoDB.query({ usuario: req.body.usuarioVisita, type : "perfil" });
   return res.status(200).json( { status: true, perfil: perfil[0] } );
 });
 
