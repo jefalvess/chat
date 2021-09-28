@@ -168,7 +168,7 @@ router.post('/buscar/timeline/usuario', validateUserToken,  async  (req, res) =>
 
   buscarTimeline.sort((a, b) => (a.order < b.order ? 1 : -1));
 
-  return res.status(200).json( { status: true, timelineData: buscarTimeline } );
+  return res.status(200).json( { status: true, timelineData: buscarTimeline, usuario : req.user.usuario } );
 
 });
 

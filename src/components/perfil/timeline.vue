@@ -1,5 +1,47 @@
 <template>
   <div class="bx--col">
+
+     <div
+      style="
+        margin-top: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+      class="bx--row"
+    >
+      <cv-text-area
+        light="light"
+        maxlength="280"
+        placeholder="No que voce esta pensando"
+        v-model="textoInput"
+      >
+      </cv-text-area>
+    </div>
+    <div
+      style="
+        margin-top: 3rem;
+        display: flex;
+        justify-content: right;
+        margin-top: 1rem;
+      "
+      class="bx--row"
+    >
+      {{ textoInput.length }} | 280
+    </div>
+
+    <div
+      style="
+        margin-bottom: 1rem;
+        margin-top: 4rem;
+        display: flex;
+        justify-content: right;
+        margin-top: 1rem;
+      "
+      class="bx--row"
+    >
+      <cv-button @click="postTimeLine()"> Publicar </cv-button>
+    </div>
   
     <div class="bx--col--lg" style="margin-left: -1rem; margin-right: -1.5rem">
       <div
@@ -28,6 +70,13 @@
           <div style="padding: 0rem 0rem 0rem 1rem" class="bx--col">
             {{ item.order | date }}
           </div>
+
+          <div style="padding: 0rem 1rem 0rem 1rem" class="bx--col">
+            <TrashCan
+              v-on:click="deletePost(index)"
+              style="cursor: pointer; float: right"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -37,6 +86,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import axios from 'axios';
+import TrashCan from '@carbon/icons-vue/es/trash-can/20';
 
 
 export default {
@@ -56,14 +106,39 @@ export default {
       },
     },
   },
+  components : {
+    TrashCan
+  },
   methods: {
-    ...mapActions(['setLoadingPage']),
+    ...mapActions(['setLoadingPage', 'setModalEdit']),
     async buscarMensagens() {
-
       let payload = { token: this.token };
       let response = await axios.post('/api/buscar/timeline/usuario', payload);
       if (response.data.status === true) {
         this.timelineData = response.data.timelineData;
+        this.setModalEdit(response.data.usuario)
+      }
+
+    },
+    async deletePost(index) {
+      let payload = { token: this.token, id: this.timelineData[index]._id };
+      axios.post('/api/delete/post', payload);
+      this.timelineData.splice(index, 1);
+    },
+    async postTimeLine() {
+      if (this.textoInput !== '') {
+        let payload = {
+          token: this.token,
+          usuario: this.modalEdit,
+          texto: this.textoInput,
+        };
+        axios.post('/api/create/timeline', payload);
+        this.timelineData.splice(0, 0, {
+          usuario: this.modalEdit,
+          texto: this.textoInput,
+          order: Date.now()
+        });
+        this.textoInput = '';
       }
     },
   },
